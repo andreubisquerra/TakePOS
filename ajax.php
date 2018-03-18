@@ -1,4 +1,5 @@
-﻿/* Copyright (C) 2018	Charles-FR BENKE		<jove@bisquerra.com>
+<?php
+/* Copyright (C) 2001-2004	Andreu Bisquerra	<jove@bisquerra.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,3 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ *	\file       htdocs/index.php
+ *	\brief      Dolibarr home page
+ */
+
+define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to go on it from another web site.
+
+$res=@include("../main.inc.php");
+if (! $res) $res=@include("../../main.inc.php");
+require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
+
+$categorie = new Categorie($db);
+$categories = $categorie->get_full_arbo('product');
+echo json_encode($categories);

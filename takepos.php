@@ -22,9 +22,10 @@
 
 define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to go on it from another web site.
 
-$res=@include("../../main.inc.php");
-if (! $res) $res=@include("../../../main.inc.php");
+$res=@include("../main.inc.php");
+if (! $res) $res=@include("../../main.inc.php");
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
+require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 
 $langs->load("main");
 $langs->load("bills");
@@ -48,22 +49,28 @@ if (! empty($conf->global->MAIN_APPLICATION_TITLE)) $title='TakePOS - '.$conf->g
 top_htmlhead($head, $title, $disablejs, $disablehead, $arrayofjs, $arrayofcss);
 
 ?>
-<link rel="stylesheet" href="css/pos.css"> 
-<link rel="stylesheet" href="js/jtable/themes/metro/lightgray/jtable.min.css">
+<link rel="stylesheet" href="css/pos.css?a=b"> 
 <script type="text/javascript" src="js/takepos.js" ></script>
 <script language="javascript">
-	$(function(){
-		$('form.nice').jqTransform({imgPath:'img/'});
-		
-		});
-		$(document).ready(function() {
-			$('#poslines').jtable('load');
-		});
+<?php
+$categorie = new Categorie($db);
+$categories = $categorie->get_full_arbo('product');
+?>
+var categories = JSON.parse( '<?php echo json_encode($categories);?>' );
+$("#catdesc0").html("asdf");
+function PrintCategories(first){
+	for (i = 0; i < 13; i++) {
+		if (typeof variable == 'undefined') break;
+		$("#catdesc"+i).text(categories[parseInt(i)+parseInt(first)]['label']);
+	}
+}
+PrintCategories(0);
 </script>       
 
 <body>
 <div class="row">
-   <div id="poslines"></div>
+   <div id="poslines">
+   </div>
    <div>
         <button type="button" class="calcbutton" onclick="changer(7);">7</button>
         <button type="button" class="calcbutton" onclick="changer(8);">8</button>
@@ -84,7 +91,23 @@ top_htmlhead($head, $title, $disablejs, $disablehead, $arrayofjs, $arrayofcss);
 </div>
 
 <div class="row">
-   <div>text</div>
+   <div>
+   <?php
+	$count=0;
+	while ($count<16)
+	{
+	?>
+	<div class='wrapper' <?php if ($count==15) echo 'onclick="prevcategories();"'; else if ($count==16) echo 'onclick="nextcategories();"'; else echo 'onclick="loadproducts(categories[(14*pagecat)-14+'.$count.'][0], 1, '.$count.');"';?> id='catdiv<?php echo $count;?>'>
+		<img class='imgwrapper' <?php if ($count==15) echo 'src="img/arrow-prev-top.png"'; if ($count==16) echo 'src="img/arrow-next-top.png"';?> width="100%" id='catimg<?php echo $count;?>'/>
+		<div class='description'>
+			<div class='description_content' id='catdesc<?php echo $count;?>'>1<?php if ($count==16) echo $langs->trans("following");?></div>
+		</div>
+	</div>
+	<?php
+	$count++;
+	}
+	?>
+   </div>
    <div>img</div>
    <div>txt</div>
 </div>
