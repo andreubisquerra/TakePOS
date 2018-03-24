@@ -57,6 +57,19 @@ div.wrapper{
 	box-shadow: 3px 3px 2px #888;
 }
 
+div.wrapper2{
+	float:left; /* important */
+	position:relative; /* important(so we can absolutely position the description div */
+	width:10.2%;
+	height:23%;
+	margin-top:0.5%;
+	margin-bottom:0.5%;
+	margin-left:0.5%;
+	margin-right:0.5%;
+	border: 0.1em solid;
+	box-shadow: 3px 3px 2px #888;
+}
+
 div.description{
 	position:absolute; /* absolute position (so we can position it where we want)*/
 	bottom:0px; /* position will be on bottom */
@@ -82,4 +95,11 @@ p.description_content{
 	padding:10px;
 	margin:0px;
 	
+}
+
+img.gray {
+	filter: grayscale(100%);
+	-webkit-filter: grayscale(100%); /* For Webkit browsers */
+	filter: gray; /* For IE 6 - 9 */
+	filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
 }

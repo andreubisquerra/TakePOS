@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2001-2004	Andreu Bisquerra	<jove@bisquerra.com>
+/* Copyright (C) 2018	Andreu Bisquerra	<jove@bisquerra.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,11 +13,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
-/**
- *	\file       htdocs/index.php
- *	\brief      Dolibarr home page
  */
 
 define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to go on it from another web site.
@@ -49,7 +44,7 @@ if (! empty($conf->global->MAIN_APPLICATION_TITLE)) $title='TakePOS - '.$conf->g
 top_htmlhead($head, $title, $disablejs, $disablehead, $arrayofjs, $arrayofcss);
 
 ?>
-<link rel="stylesheet" href="css/pos.css?a=b"> 
+<link rel="stylesheet" href="css/pos.css?a=xx"> 
 <script type="text/javascript" src="js/takepos.js" ></script>
 <script language="javascript">
 <?php
@@ -57,60 +52,96 @@ $categorie = new Categorie($db);
 $categories = $categorie->get_full_arbo('product');
 ?>
 var categories = JSON.parse( '<?php echo json_encode($categories);?>' );
-$("#catdesc0").html("asdf");
 function PrintCategories(first){
 	for (i = 0; i < 13; i++) {
-		if (typeof variable == 'undefined') break;
+		if (typeof (categories[parseInt(i)+parseInt(first)]) == "undefined") break;
 		$("#catdesc"+i).text(categories[parseInt(i)+parseInt(first)]['label']);
+        $("#catimg"+i).attr("src","genimg/?query=cat&w=55&h=50&id="+categories[parseInt(i)+parseInt(first)]['rowid']);
+        $("#catdiv"+i).data("rowid",categories[parseInt(i)+parseInt(first)]['rowid']);
 	}
 }
-PrintCategories(0);
+
+function LoadProducts(category, position){
+	//$('#catimg'+position).addClass('gray'); 
+    $('#catimg'+position).animate({opacity: '0.5'});
+	//setTimeout(function(){$('#catimg'+position).removeClass('gray');},200);
+		/*currentcat=category;
+		pagepro=page;
+		var cachedData = window.localStorage[category];
+		if (cachedData) showproducts(JSON.parse(cachedData), page);
+		else {
+		$.getJSON('./ajax_pos.php?action=getProducts&category='+category, function(data) {
+		window.localStorage[category] = JSON.stringify(data);
+		showproducts(data, page);
+		});
+	}*/
+}
+
+$( document ).ready(function() {
+    PrintCategories(0);
+});
 </script>       
 
-<body>
-<div class="row">
-   <div id="poslines">
-   </div>
-   <div>
-        <button type="button" class="calcbutton" onclick="changer(7);">7</button>
-        <button type="button" class="calcbutton" onclick="changer(8);">8</button>
-        <button type="button" class="calcbutton" onclick="changer(9);">9</button>
-        <button type="button" class="calcbutton2" onclick="changer('q');"><?php echo $langs->trans("Qty"); ?></button>
-        <button type="button" class="calcbutton" onclick="changer(4);">4</button>
-        <button type="button" class="calcbutton" onclick="changer(5);">5</button>
-        <button type="button" class="calcbutton" onclick="changer(6);">6</button>
-        <button type="button" class="calcbutton2" onclick="changer('p');"><?php echo $langs->trans("Price"); ?></button>
-        <button type="button" class="calcbutton" onclick="changer(1);">1</button>
-        <button type="button" class="calcbutton" onclick="changer(2);">2</button>
-        <button type="button" class="calcbutton" onclick="changer(3);">3</button>
-        <button type="button" class="calcbutton2" onclick="changer('d');"><?php echo $langs->trans("ReductionShort"); ?></button>
-        <button type="button" class="calcbutton" onclick="changer(0);">0</button>
-        <button type="button" class="calcbutton" onclick="changer('.');">.</button>
-        <button type="button" class="calcbutton" onclick="changer('c');">C</button></div>
-   <div>txt</div>
+<body style="overflow: hidden">
+
+<div id="poslines" style="position:absolute; top:8%; left:0.5%; height:30%; width:40%; overflow: auto;">
 </div>
 
-<div class="row">
-   <div>
-   <?php
+<div style="position:absolute; top:1%; left:32.5%; height:37%; width:32.5%;">
+    <button type="button" class="calcbutton" onclick="changer(7);">7</button>
+    <button type="button" class="calcbutton" onclick="changer(8);">8</button>
+    <button type="button" class="calcbutton" onclick="changer(9);">9</button>
+    <button type="button" class="calcbutton2" onclick="changer('q');"><?php echo $langs->trans("Qty"); ?></button>
+    <button type="button" class="calcbutton" onclick="changer(4);">4</button>
+    <button type="button" class="calcbutton" onclick="changer(5);">5</button>
+    <button type="button" class="calcbutton" onclick="changer(6);">6</button>
+    <button type="button" class="calcbutton2" onclick="changer('p');"><?php echo $langs->trans("Price"); ?></button>
+    <button type="button" class="calcbutton" onclick="changer(1);">1</button>
+    <button type="button" class="calcbutton" onclick="changer(2);">2</button>
+    <button type="button" class="calcbutton" onclick="changer(3);">3</button>
+    <button type="button" class="calcbutton2" onclick="changer('d');"><?php echo $langs->trans("ReductionShort"); ?></button>
+    <button type="button" class="calcbutton" onclick="changer(0);">0</button>
+    <button type="button" class="calcbutton" onclick="changer('.');">.</button>
+    <button type="button" class="calcbutton" onclick="changer('c');">C</button>
+    <button type="button" class="calcbutton2" id="notes"><?php echo $langs->trans("Notes"); ?></button>
+</div>
+				
+<div style="position:absolute; top:39%; left:0.3%; height:59%; width:32%;">
+	<?php
 	$count=0;
 	while ($count<16)
 	{
 	?>
-	<div class='wrapper' <?php if ($count==15) echo 'onclick="prevcategories();"'; else if ($count==16) echo 'onclick="nextcategories();"'; else echo 'onclick="loadproducts(categories[(14*pagecat)-14+'.$count.'][0], 1, '.$count.');"';?> id='catdiv<?php echo $count;?>'>
-		<img class='imgwrapper' <?php if ($count==15) echo 'src="img/arrow-prev-top.png"'; if ($count==16) echo 'src="img/arrow-next-top.png"';?> width="100%" id='catimg<?php echo $count;?>'/>
+	<div class='wrapper' <?php if ($count==14) echo 'onclick="prevcategories();"'; else if ($count==15) echo 'onclick="nextcategories();"'; else echo 'onclick="LoadProducts($(this).data(\'rowid\'),'.$count.');"';?> id='catdiv<?php echo $count;?>'>
+		<img class='imgwrapper' <?php if ($count==14) echo 'src="img/arrow-prev-top.png"'; if ($count==15) echo 'src="img/arrow-next-top.png"';?> width="98%" id='catimg<?php echo $count;?>'/>
 		<div class='description'>
-			<div class='description_content' id='catdesc<?php echo $count;?>'>1<?php if ($count==16) echo $langs->trans("following");?></div>
+			<div class='description_content' id='catdesc<?php echo $count;?>'></div>
 		</div>
 	</div>
 	<?php
-	$count++;
+    $count++;
 	}
 	?>
-   </div>
-   <div>img</div>
-   <div>txt</div>
 </div>
+	
+<div style="position:absolute; top:39%; left:32%; height:58%; width:72%;">
+<?php
+$count=0;
+while ($count<32)
+	{
+	$count++;
+	?>
+	<div class='wrapper2' id='prodiv<?php echo $count;?>' <?php if ($count==31) {?> onclick="if ($('#prodesc27').text()==previous) loadproducts(currentcat, pagepro-1);" <?php } if ($count==32) {?> onclick="if ($('#prodesc28').text()==following) loadproducts(currentcat, pagepro+1);" <?php } ?>>
+		<img class='imgwrapper' <?php if ($count==31) echo 'src="img/arrow-prev-top.png"'; if ($count==32) echo 'src="img/arrow-next-top.png"';?> width="95%" id='proimg<?php echo $count;?>'/>
+		<div class='description'>
+			<div class='description_content' id='prodesc<?php echo $count;?>'></div>
+		</div>
+	</div>
+	<?php
+	}
+?>
+</div>
+
 </body>
 <?php
 
