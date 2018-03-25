@@ -52,6 +52,8 @@ $categorie = new Categorie($db);
 $categories = $categorie->get_full_arbo('product');
 ?>
 var categories = JSON.parse( '<?php echo json_encode($categories);?>' );
+var currentcat;
+var place="0";
 function PrintCategories(first){
 	for (i = 0; i < 13; i++) {
 		if (typeof (categories[parseInt(i)+parseInt(first)]) == "undefined") break;
@@ -61,20 +63,26 @@ function PrintCategories(first){
 	}
 }
 
-function LoadProducts(category, position){
-	//$('#catimg'+position).addClass('gray'); 
-    $('#catimg'+position).animate({opacity: '0.5'});
-	//setTimeout(function(){$('#catimg'+position).removeClass('gray');},200);
-		/*currentcat=category;
-		pagepro=page;
-		var cachedData = window.localStorage[category];
-		if (cachedData) showproducts(JSON.parse(cachedData), page);
-		else {
-		$.getJSON('./ajax_pos.php?action=getProducts&category='+category, function(data) {
-		window.localStorage[category] = JSON.stringify(data);
-		showproducts(data, page);
-		});
-	}*/
+function LoadProducts(position){
+    $('#catimg'+position).animate({opacity: '0.5'}, 100);
+	$('#catimg'+position).animate({opacity: '1'}, 100);
+	currentcat=$('#catimg'+position).data('rowid');
+	pageproducts=1;
+	$.getJSON('./ajax.php?action=getProducts&category='+currentcat, function(data) {
+		for (i = 0; i < 23; i++) {
+			if (typeof (data[i]) == "undefined") break;
+			$("#prodesc"+i).text(data[parseInt(i)]['label']);
+			$("#proimg"+i).attr("src","genimg/?query=pro&w=55&h=50&id="+data[i]['id']);
+			$("#prodiv"+i).data("rowid",data[i]['id']);
+		}
+	});
+}
+
+function ClickProduct(position){
+    $('#proimg'+position).animate({opacity: '0.5'}, 100);
+	$('#proimg'+position).animate({opacity: '1'}, 100);
+	idproduct=$('#prodiv'+position).data('rowid');
+	$("#poslines").load("invoice.php?action=addline&place="+place+"&idproduct="+idproduct);
 }
 
 $( document ).ready(function() {
@@ -112,7 +120,7 @@ $( document ).ready(function() {
 	while ($count<16)
 	{
 	?>
-	<div class='wrapper' <?php if ($count==14) echo 'onclick="prevcategories();"'; else if ($count==15) echo 'onclick="nextcategories();"'; else echo 'onclick="LoadProducts($(this).data(\'rowid\'),'.$count.');"';?> id='catdiv<?php echo $count;?>'>
+	<div class='wrapper' <?php if ($count==14) echo 'onclick="prevcategories();"'; else if ($count==15) echo 'onclick="nextcategories();"'; else echo 'onclick="LoadProducts('.$count.');"';?> id='catdiv<?php echo $count;?>'>
 		<img class='imgwrapper' <?php if ($count==14) echo 'src="img/arrow-prev-top.png"'; if ($count==15) echo 'src="img/arrow-next-top.png"';?> width="98%" id='catimg<?php echo $count;?>'/>
 		<div class='description'>
 			<div class='description_content' id='catdesc<?php echo $count;?>'></div>
@@ -129,15 +137,15 @@ $( document ).ready(function() {
 $count=0;
 while ($count<32)
 	{
-	$count++;
 	?>
-	<div class='wrapper2' id='prodiv<?php echo $count;?>' <?php if ($count==31) {?> onclick="if ($('#prodesc27').text()==previous) loadproducts(currentcat, pagepro-1);" <?php } if ($count==32) {?> onclick="if ($('#prodesc28').text()==following) loadproducts(currentcat, pagepro+1);" <?php } ?>>
-		<img class='imgwrapper' <?php if ($count==31) echo 'src="img/arrow-prev-top.png"'; if ($count==32) echo 'src="img/arrow-next-top.png"';?> width="95%" id='proimg<?php echo $count;?>'/>
+	<div class='wrapper2' id='prodiv<?php echo $count;?>' <?php if ($count==31) {?> onclick="if ($('#prodesc27').text()==previous) loadproducts(currentcat, pagepro-1);" <?php } if ($count==32) {?> onclick="if ($('#prodesc28').text()==following) loadproducts(currentcat, pagepro+1);" <?php } else echo 'onclick="ClickProduct('.$count.');"';?>>
+		<img class='imgwrapper' <?php if ($count==30) echo 'src="img/arrow-prev-top.png"'; if ($count==31) echo 'src="img/arrow-next-top.png"';?> width="95%" id='proimg<?php echo $count;?>'/>
 		<div class='description'>
 			<div class='description_content' id='prodesc<?php echo $count;?>'></div>
 		</div>
 	</div>
 	<?php
+	$count++;
 	}
 ?>
 </div>

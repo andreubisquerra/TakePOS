@@ -26,6 +26,7 @@ $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php");
 require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 
-$categorie = new Categorie($db);
-$categories = $categorie->get_full_arbo('product');
-echo json_encode($categories);
+$object = new Categorie($db);
+$result=$object->fetch(1);
+$prods = $object->getObjectsInCateg("product");
+echo json_encode($prods);
