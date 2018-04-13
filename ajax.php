@@ -24,9 +24,10 @@ define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to
 
 $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php");
+$category = GETPOST('category');
 require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 
 $object = new Categorie($db);
-$result=$object->fetch(1);
+$result=$object->fetch($category);
 $prods = $object->getObjectsInCateg("product");
 echo json_encode($prods);

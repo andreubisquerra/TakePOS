@@ -53,9 +53,11 @@ $categories = $categorie->get_full_arbo('product');
 ?>
 var categories = JSON.parse( '<?php echo json_encode($categories);?>' );
 var currentcat;
+var pageproducts=0;
+var pagecategories=0;
 var place="0";
 function PrintCategories(first){
-	for (i = 0; i < 13; i++) {
+	for (i = 0; i < 14; i++) {
 		if (typeof (categories[parseInt(i)+parseInt(first)]) == "undefined") break;
 		$("#catdesc"+i).text(categories[parseInt(i)+parseInt(first)]['label']);
         $("#catimg"+i).attr("src","genimg/?query=cat&w=55&h=50&id="+categories[parseInt(i)+parseInt(first)]['rowid']);
@@ -63,17 +65,79 @@ function PrintCategories(first){
 	}
 }
 
+function MoreCategories(moreorless){
+	if (moreorless=="more"){
+		$('#catimg15').animate({opacity: '0.5'}, 100);
+		$('#catimg15').animate({opacity: '1'}, 100);
+		pagecategories=pagecategories+1;
+	}
+	if (moreorless=="less"){
+		$('#catimg14').animate({opacity: '0.5'}, 100);
+		$('#catimg14').animate({opacity: '1'}, 100);
+		if (pagecategories==0) return; //Return if no less pages
+		pagecategories=pagecategories-1;
+	}
+	if (typeof (categories[14*pagecategories] && moreorless=="more") == "undefined"){ // Return if no more pages
+		pagecategories=pagecategories-1;
+		return;
+	}
+	for (i = 0; i < 14; i++) {
+		if (typeof (categories[i+(14*pagecategories)]) == "undefined"){
+				$("#catdesc"+i).text("");
+				$("#catimg"+i).attr("src","");
+				continue;
+			}
+		$("#catdesc"+i).text(categories[i+(14*pagecategories)]['label']);
+        $("#catimg"+i).attr("src","genimg/?query=cat&w=55&h=50&id="+categories[i+(14*pagecategories)]['rowid']);
+        $("#catdiv"+i).data("rowid",categories[i+(14*pagecategories)]['rowid']);
+	}	
+}
+
 function LoadProducts(position){
     $('#catimg'+position).animate({opacity: '0.5'}, 100);
 	$('#catimg'+position).animate({opacity: '1'}, 100);
-	currentcat=$('#catimg'+position).data('rowid');
-	pageproducts=1;
+	currentcat=$('#catdiv'+position).data('rowid');
+	pageproducts=0;
 	$.getJSON('./ajax.php?action=getProducts&category='+currentcat, function(data) {
-		for (i = 0; i < 23; i++) {
-			if (typeof (data[i]) == "undefined") break;
+		for (i = 0; i < 30; i++) {
+			if (typeof (data[i]) == "undefined"){
+				$("#prodesc"+i).text("");
+				$("#proimg"+i).attr("src","");
+				continue;
+			}
 			$("#prodesc"+i).text(data[parseInt(i)]['label']);
 			$("#proimg"+i).attr("src","genimg/?query=pro&w=55&h=50&id="+data[i]['id']);
 			$("#prodiv"+i).data("rowid",data[i]['id']);
+		}
+	});
+}
+
+function MoreProducts(moreorless){
+	if (moreorless=="more"){
+		$('#proimg31').animate({opacity: '0.5'}, 100);
+		$('#proimg31').animate({opacity: '1'}, 100);
+		pageproducts=pageproducts+1;
+	}
+	if (moreorless=="less"){
+		$('#proimg30').animate({opacity: '0.5'}, 100);
+		$('#proimg30').animate({opacity: '1'}, 100);
+		if (pageproducts==0) return; //Return if no less pages
+		pageproducts=pageproducts-1;
+	}
+	$.getJSON('./ajax.php?action=getProducts&category='+currentcat, function(data) {
+		if (typeof (data[(30*pageproducts)]) == "undefined" && moreorless=="more"){ // Return if no more pages
+			pageproducts=pageproducts-1;
+			return;
+		}
+		for (i = 0; i < 30; i++) {
+			if (typeof (data[i+(30*pageproducts)]) == "undefined"){
+				$("#prodesc"+i).text("");
+				$("#proimg"+i).attr("src","");
+				continue;
+			}
+			$("#prodesc"+i).text(data[parseInt(i+(30*pageproducts))]['label']);
+			$("#proimg"+i).attr("src","genimg/?query=pro&w=55&h=50&id="+data[i+(30*pageproducts)]['id']);
+			$("#prodiv"+i).data("rowid",data[i+(30*pageproducts)]['id']);
 		}
 	});
 }
@@ -120,7 +184,7 @@ $( document ).ready(function() {
 	while ($count<16)
 	{
 	?>
-	<div class='wrapper' <?php if ($count==14) echo 'onclick="prevcategories();"'; else if ($count==15) echo 'onclick="nextcategories();"'; else echo 'onclick="LoadProducts('.$count.');"';?> id='catdiv<?php echo $count;?>'>
+	<div class='wrapper' <?php if ($count==14) echo 'onclick="MoreCategories(\'less\');"'; else if ($count==15) echo 'onclick="MoreCategories(\'more\');"'; else echo 'onclick="LoadProducts('.$count.');"';?> id='catdiv<?php echo $count;?>'>
 		<img class='imgwrapper' <?php if ($count==14) echo 'src="img/arrow-prev-top.png"'; if ($count==15) echo 'src="img/arrow-next-top.png"';?> width="98%" id='catimg<?php echo $count;?>'/>
 		<div class='description'>
 			<div class='description_content' id='catdesc<?php echo $count;?>'></div>
@@ -138,7 +202,7 @@ $count=0;
 while ($count<32)
 	{
 	?>
-	<div class='wrapper2' id='prodiv<?php echo $count;?>' <?php if ($count==31) {?> onclick="if ($('#prodesc27').text()==previous) loadproducts(currentcat, pagepro-1);" <?php } if ($count==32) {?> onclick="if ($('#prodesc28').text()==following) loadproducts(currentcat, pagepro+1);" <?php } else echo 'onclick="ClickProduct('.$count.');"';?>>
+	<div class='wrapper2' id='prodiv<?php echo $count;?>' <?php if ($count==30) {?> onclick="MoreProducts('less');" <?php } if ($count==31) {?> onclick="MoreProducts('more');" <?php } else echo 'onclick="ClickProduct('.$count.');"';?>>
 		<img class='imgwrapper' <?php if ($count==30) echo 'src="img/arrow-prev-top.png"'; if ($count==31) echo 'src="img/arrow-next-top.png"';?> width="95%" id='proimg<?php echo $count;?>'/>
 		<div class='description'>
 			<div class='description_content' id='prodesc<?php echo $count;?>'></div>

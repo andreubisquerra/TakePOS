@@ -25,8 +25,9 @@ $w= GETPOST('w');
 $h= GETPOST('h');
 $query= GETPOST('query');
 
-// Content type
 header('Content-Type: image/jpeg');
+header('Cache-Control: max-age=604800, public, must-revalidate');
+header('Pragma: cache');
 
 if ($query=="cat")
 {

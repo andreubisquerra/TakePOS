@@ -52,7 +52,7 @@ if ($action=="addline" and $placeid==0)
 if ($action=="addline"){
 	$prod = new Product($db);
 	$prod->fetch($idproduct);
-	$invoice->addline($prod->description, $prod->price, 1, 21, $localtax1_tx, $localtax2_tx, $idproduct, $remise_percent, $date_start, $date_end, 0, $info_bits, '', $price_base_type, $pu_ttc, $type, - 1, $special_code, '', 0, GETPOST('fk_parent_line'), $fournprice, $buyingprice, $label, $array_options, $_POST['progress'], '', $fk_unit, $pu_ht_devise);
+	$invoice->addline($prod->description, $prod->price, 1, 21, $prod->localtax1_tx, $prod->localtax2_tx, $idproduct, $prod->remise_percent, '', 0, 0, 0, '', $prod->price_base_type, $prod->price_ttc, $prod->type, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
 }
 
 echo "articulo".$idproduct;
