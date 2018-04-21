@@ -148,7 +148,16 @@ function ClickProduct(position){
     $('#proimg'+position).animate({opacity: '0.5'}, 100);
 	$('#proimg'+position).animate({opacity: '1'}, 100);
 	idproduct=$('#prodiv'+position).data('rowid');
-	$("#poslines").load("invoice.php?action=addline&place="+place+"&idproduct="+idproduct);
+	$("#poslines").load("invoice.php?action=addline&place="+place+"&idproduct="+idproduct, function() {
+		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+	});
+	
+}
+
+function deleteline(){
+	$("#poslines").load("invoice.php?action=deleteline&place="+place+"&idline="+selectedline, function() {
+		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+	});
 }
 
 $( document ).ready(function() {
@@ -158,7 +167,7 @@ $( document ).ready(function() {
 
 <body style="overflow: hidden">
 
-<div id="poslines" style="position:absolute; top:8%; left:0.5%; height:30%; width:40%; overflow: auto;">
+<div id="poslines" style="position:absolute; top:2%; left:0.5%; height:36%; width:31%; overflow: auto;">
 </div>
 
 <div style="position:absolute; top:1%; left:32.5%; height:37%; width:32.5%;">
@@ -177,7 +186,7 @@ $( document ).ready(function() {
     <button type="button" class="calcbutton" onclick="changer(0);">0</button>
     <button type="button" class="calcbutton" onclick="changer('.');">.</button>
     <button type="button" class="calcbutton" onclick="changer('c');">C</button>
-    <button type="button" class="calcbutton2" id="notes"><?php echo $langs->trans("Notes"); ?></button>
+    <button type="button" class="calcbutton2" id="delete" style="color: red;" onclick="deleteline();"><b>X</b></button>
 </div>
 
 <?php

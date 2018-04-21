@@ -25,6 +25,7 @@ $action = GETPOST('action');
 $idproduct = GETPOST('idproduct');
 $place = GETPOST('place');
 $number = GETPOST('number');
+$idline = GETPOST('idline');
 
 $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$place'";
 $resql = $db->query($sql);
@@ -53,7 +54,46 @@ if ($action=="addline"){
 	$prod = new Product($db);
 	$prod->fetch($idproduct);
 	$invoice->addline($prod->description, $prod->price, 1, 21, $prod->localtax1_tx, $prod->localtax2_tx, $idproduct, $prod->remise_percent, '', 0, 0, 0, '', $prod->price_base_type, $prod->price_ttc, $prod->type, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
+	$invoice->fetch($placeid);
 }
 
-echo "articulo".$idproduct;
-echo "<br>Place ID ".$placeid;
+if ($action=="deleteline"){
+	$invoice->deleteline($idline);
+	$invoice->fetch($placeid);
+}
+
+?>
+<style>
+.selected {
+	color: red;
+}
+</style>
+<script language="javascript">
+var selectedline=0;
+$(document).ready(function(){
+    $('table tbody tr').click(function(){
+		$('table tbody tr').removeClass("selected");
+		selectedline=this.id;
+		$(this).addClass("selected");
+    });
+});
+</script>
+<?php
+print '<div class="div-table-responsive-no-min">';
+print '<table id="tablelines" class="noborder noshadow" width="100%">';
+print '<tr class="liste_titre nodrag nodrop">';
+print '<td class="linecoldescription">'.$langs->trans('Description').'</td>';
+print '<td class="linecolqty" align="right">'.$langs->trans('Qty').'</td>';
+print '<td class="linecolht" align="right">'.$langs->trans('TotalHTShort').'</td>';
+print "</tr>\n";
+foreach ($invoice->lines as $line)
+{
+	print '<tr class="drag drop oddeven" id="'.$line->rowid.'">';
+	print '<td>'.$line->product_label.'</td>';
+	print '<td align="right">'.$line->qty.'</td>';
+	print '<td align="right">'.price($line->total_ttc).'</td>';
+	print '</tr>';
+}
+print '</table>';
+print '<p style="font-size:120%;" align="right"><b>'.$langs->trans('TotalTTC').': '.price($invoice->total_ttc, 1, '', 1, - 1, - 1, $conf->currency).'&nbsp;</b></p>';
+print '</div>';		
