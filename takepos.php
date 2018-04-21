@@ -44,8 +44,10 @@ if (! empty($conf->global->MAIN_APPLICATION_TITLE)) $title='TakePOS - '.$conf->g
 top_htmlhead($head, $title, $disablejs, $disablehead, $arrayofjs, $arrayofcss);
 
 ?>
-<link rel="stylesheet" href="css/pos.css?a=xx"> 
+<link rel="stylesheet" href="css/pos.css?a=xxx"> 
 <script type="text/javascript" src="js/takepos.js" ></script>
+<link rel="stylesheet" href="css/colorbox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="js/jquery.colorbox-min.js"></script>
 <script language="javascript">
 <?php
 $categorie = new Categorie($db);
@@ -176,6 +178,20 @@ $( document ).ready(function() {
     <button type="button" class="calcbutton" onclick="changer('.');">.</button>
     <button type="button" class="calcbutton" onclick="changer('c');">C</button>
     <button type="button" class="calcbutton2" id="notes"><?php echo $langs->trans("Notes"); ?></button>
+</div>
+
+<?php
+$menus = array();
+$r=0;
+$menus[$r++]=array('title'=>$langs->trans("CloseBill"),
+                   'action'=>'');	
+?>
+<div style="position:absolute; top:1%; left:65.5%; height:37%; width:32.5%;">
+<?php
+foreach($menus as $menu) {
+    echo '<button type="button" class="actionbutton" onclick="changer(7);">'.$menu['title'].'</button>';
+}
+?>
 </div>
 				
 <div style="position:absolute; top:39%; left:0.3%; height:59%; width:32%;">
