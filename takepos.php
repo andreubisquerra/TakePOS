@@ -21,20 +21,20 @@ $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php");
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
+require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
+
+$place = GETPOST('place');
+$action = GETPOST('action');
 
 $langs->load("main");
 $langs->load("bills");
 $langs->load("orders");
 
-/*
- * Actions
- */
-
-
-
-/*
- * View
- */
+if ($place=="") $place="0";
+$sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$place'";
+$resql = $db->query($sql);
+$row = $db->fetch_array ($resql);
+$placeid=$row[0];
 
 if (! is_object($form)) $form=new Form($db);
 
@@ -160,8 +160,24 @@ function deleteline(){
 	});
 }
 
+function CloseBill(){
+	$.colorbox({href:"pay.php?place="+place, onClosed: function () { Refresh(); }, width:"80%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("CloseBill");?>"});
+}
+
+function FreeZone(){
+	$.colorbox({href:"freezone.php?place=<?php echo $place;?>", onClosed: function () { Refresh(); },width:"80%", height:"30%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("FreeZone");?>"});
+}
+
+function Refresh(){
+	$("#poslines").load("invoice.php?place="+place<?php if ($action==valid) echo "+\"&action=validated&number=".$invoice->facnumber."&id=".$placeid."\""; ?>, function() {
+		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+	});
+}
+
 $( document ).ready(function() {
     PrintCategories(0);
+	LoadProducts(0);
+	Refresh();
 });
 </script>       
 
@@ -190,15 +206,18 @@ $( document ).ready(function() {
 </div>
 
 <?php
+// User menu and external TakePOS modules
 $menus = array();
 $r=0;
 $menus[$r++]=array('title'=>$langs->trans("CloseBill"),
-                   'action'=>'');	
+                   'action'=>'CloseBill();');
+$menus[$r++]=array('title'=>$langs->trans("FreeZone"),
+                   'action'=>'FreeZone();');
 ?>
 <div style="position:absolute; top:1%; left:65.5%; height:37%; width:32.5%;">
 <?php
 foreach($menus as $menu) {
-    echo '<button type="button" class="actionbutton" onclick="changer(7);">'.$menu['title'].'</button>';
+    echo '<button type="button" class="actionbutton" onclick="'.$menu['action'].';">'.$menu['title'].'</button>';
 }
 ?>
 </div>

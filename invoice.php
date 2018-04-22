@@ -20,12 +20,15 @@ define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to
 $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php");
 require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
+$langs->load("bills");
+$langs->load("cashdesk");
 $id = GETPOST('id');
 $action = GETPOST('action');
 $idproduct = GETPOST('idproduct');
 $place = GETPOST('place');
 $number = GETPOST('number');
 $idline = GETPOST('idline');
+$desc = GETPOST('desc');
 
 $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$place'";
 $resql = $db->query($sql);
@@ -35,6 +38,16 @@ if (! $placeid) $placeid=0;
 else{
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
+}
+
+/*
+ * Actions
+ */
+
+if ($action == 'valid' && $user->rights->facture->creer){
+	$invoice = new Facture($db);
+	$invoice->fetch($placeid);
+	$invoice->validate($user);
 }
 
 if ($action=="addline" and $placeid==0)
@@ -54,6 +67,11 @@ if ($action=="addline"){
 	$prod = new Product($db);
 	$prod->fetch($idproduct);
 	$invoice->addline($prod->description, $prod->price, 1, 21, $prod->localtax1_tx, $prod->localtax2_tx, $idproduct, $prod->remise_percent, '', 0, 0, 0, '', $prod->price_base_type, $prod->price_ttc, $prod->type, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
+	$invoice->fetch($placeid);
+}
+
+if ($action=="freezone"){
+	$invoice->addline($desc, $number, 1, 21, 0, 0, 0, 0, '', 0, 0, 0, '', 'TTC', $number, 0, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
 	$invoice->fetch($placeid);
 }
 
@@ -77,6 +95,10 @@ $(document).ready(function(){
 		$(this).addClass("selected");
     });
 });
+
+function Print(id){
+	$.colorbox({href:"receipt.php?facid="+id, width:"80%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("PrintTicket");?>"});
+}
 </script>
 <?php
 print '<div class="div-table-responsive-no-min">';
@@ -86,14 +108,18 @@ print '<td class="linecoldescription">'.$langs->trans('Description').'</td>';
 print '<td class="linecolqty" align="right">'.$langs->trans('Qty').'</td>';
 print '<td class="linecolht" align="right">'.$langs->trans('TotalHTShort').'</td>';
 print "</tr>\n";
-foreach ($invoice->lines as $line)
+if ($placeid>0) foreach ($invoice->lines as $line)
 {
 	print '<tr class="drag drop oddeven" id="'.$line->rowid.'">';
-	print '<td>'.$line->product_label.'</td>';
+	print '<td>'.$line->product_label.$line->desc.'</td>';
 	print '<td align="right">'.$line->qty.'</td>';
 	print '<td align="right">'.price($line->total_ttc).'</td>';
 	print '</tr>';
 }
 print '</table>';
 print '<p style="font-size:120%;" align="right"><b>'.$langs->trans('TotalTTC').': '.price($invoice->total_ttc, 1, '', 1, - 1, - 1, $conf->currency).'&nbsp;</b></p>';
-print '</div>';		
+if ($action=="validated"){
+	print '<p style="font-size:120%;" align="center"><b>'.$number." ".$langs->trans('BillShortStatusValidated').'</b></p>';
+	print '<center><button type="button" onclick="Print('.$id.');">'.$langs->trans('PrintTicket').'</button><center>';
+}
+print '</div>';
