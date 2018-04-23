@@ -60,11 +60,12 @@ $langs->load("cashdesk");
 	}
 	
 	function Validate(payment){
-		$.get( "invoice.php", { action: "valid", place: "<?php echo $place;?>", pay: payment} );
-		parent.$.colorbox.close();
+        parent.$("#poslines").load("invoice.php?place=<?php echo $place;?>&action=valid&pay"+payment, function() {
+            parent.$("#poslines").scrollTop(parent.$("#poslines")[0].scrollHeight);
+            parent.$.colorbox.close();
+        });
+		
 	}
-	
-
 </script>
 </head>
 <body>

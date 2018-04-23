@@ -30,14 +30,6 @@ $langs->load("main");
 $langs->load("bills");
 $langs->load("orders");
 
-if ($place=="") $place="0";
-$sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$place'";
-$resql = $db->query($sql);
-$row = $db->fetch_array ($resql);
-$placeid=$row[0];
-
-if (! is_object($form)) $form=new Form($db);
-
 // Title
 $title='TakePOS - Dolibarr '.DOL_VERSION;
 if (! empty($conf->global->MAIN_APPLICATION_TITLE)) $title='TakePOS - '.$conf->global->MAIN_APPLICATION_TITLE;
@@ -99,12 +91,14 @@ function LoadProducts(position){
     $('#catimg'+position).animate({opacity: '0.5'}, 100);
 	$('#catimg'+position).animate({opacity: '1'}, 100);
 	currentcat=$('#catdiv'+position).data('rowid');
+    if (currentcat=="") return;
 	pageproducts=0;
 	$.getJSON('./ajax.php?action=getProducts&category='+currentcat, function(data) {
 		for (i = 0; i < 30; i++) {
 			if (typeof (data[i]) == "undefined"){
 				$("#prodesc"+i).text("");
 				$("#proimg"+i).attr("src","");
+                $("#prodiv"+i).data("rowid","");
 				continue;
 			}
 			$("#prodesc"+i).text(data[parseInt(i)]['label']);
@@ -135,6 +129,7 @@ function MoreProducts(moreorless){
 			if (typeof (data[i+(30*pageproducts)]) == "undefined"){
 				$("#prodesc"+i).text("");
 				$("#proimg"+i).attr("src","");
+                $("#prodiv"+i).data("rowid","");
 				continue;
 			}
 			$("#prodesc"+i).text(data[parseInt(i+(30*pageproducts))]['label']);
@@ -148,6 +143,7 @@ function ClickProduct(position){
     $('#proimg'+position).animate({opacity: '0.5'}, 100);
 	$('#proimg'+position).animate({opacity: '1'}, 100);
 	idproduct=$('#prodiv'+position).data('rowid');
+    if (idproduct=="") return;
 	$("#poslines").load("invoice.php?action=addline&place="+place+"&idproduct="+idproduct, function() {
 		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
 	});
@@ -161,11 +157,11 @@ function deleteline(){
 }
 
 function CloseBill(){
-	$.colorbox({href:"pay.php?place="+place, onClosed: function () { Refresh(); }, width:"80%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("CloseBill");?>"});
+	$.colorbox({href:"pay.php?place="+place, width:"80%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("CloseBill");?>"});
 }
 
 function FreeZone(){
-	$.colorbox({href:"freezone.php?place=<?php echo $place;?>", onClosed: function () { Refresh(); },width:"80%", height:"30%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("FreeZone");?>"});
+	$.colorbox({href:"freezone.php?place="+place, onClosed: function () { Refresh(); },width:"80%", height:"30%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("FreeZone");?>"});
 }
 
 function Refresh(){

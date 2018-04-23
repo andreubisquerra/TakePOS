@@ -34,7 +34,7 @@ $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$plac
 $resql = $db->query($sql);
 $row = $db->fetch_array ($resql);
 $placeid=$row[0];
-if (! $placeid) $placeid=0;
+if (! $placeid) $placeid=0; // not necesary
 else{
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
@@ -118,8 +118,8 @@ if ($placeid>0) foreach ($invoice->lines as $line)
 }
 print '</table>';
 print '<p style="font-size:120%;" align="right"><b>'.$langs->trans('TotalTTC').': '.price($invoice->total_ttc, 1, '', 1, - 1, - 1, $conf->currency).'&nbsp;</b></p>';
-if ($action=="validated"){
-	print '<p style="font-size:120%;" align="center"><b>'.$number." ".$langs->trans('BillShortStatusValidated').'</b></p>';
-	print '<center><button type="button" onclick="Print('.$id.');">'.$langs->trans('PrintTicket').'</button><center>';
+if ($action=="valid"){
+	print '<p style="font-size:120%;" align="center"><b>'.$invoice->facnumber." ".$langs->trans('BillShortStatusValidated').'</b></p>';
+	print '<center><button type="button" onclick="Print('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
 }
 print '</div>';
