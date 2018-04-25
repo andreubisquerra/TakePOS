@@ -50,6 +50,8 @@ var currentcat;
 var pageproducts=0;
 var pagecategories=0;
 var place="0";
+var editaction="qty";
+var editnumber="";
 function PrintCategories(first){
 	for (i = 0; i < 14; i++) {
 		if (typeof (categories[parseInt(i)+parseInt(first)]) == "undefined") break;
@@ -168,6 +170,7 @@ function Refresh(){
 	$("#poslines").load("invoice.php?place="+place, function() {
 		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
 	});
+    $("#qty").html("<?php echo $langs->trans("Qty"); ?>");
 }
 
 function Search(){
@@ -193,6 +196,35 @@ function Search2(){
 	});
 }
 
+function Edit(number){
+    var text=selectedtext+"<br> ";
+    if (number=='c'){
+        editnumber="";
+        Refresh();
+        return;
+    }
+    else if (number=='qty'){
+        if (editaction=='qty'){
+            $("#poslines").load("invoice.php?action=updateqty&place="+place+"&idline="+selectedline+"&number="+editnumber, function() {
+                editnumber="";
+                $('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+            });
+            return;
+        }
+        else {
+            editaction="qty";
+        }
+    }
+    else {
+        editnumber=editnumber+number;
+    }
+    if (editaction=='qty'){
+        text=text+"Nueva cantidad: ";
+        $("#qty").html("OK");
+    }
+    $('#'+selectedline).find("td:first").html(text+editnumber);
+}
+
 $( document ).ready(function() {
     PrintCategories(0);
 	LoadProducts(0);
@@ -206,21 +238,21 @@ $( document ).ready(function() {
 </div>
 
 <div style="position:absolute; top:1%; left:32.5%; height:37%; width:32.5%;">
-    <button type="button" class="calcbutton" onclick="changer(7);">7</button>
-    <button type="button" class="calcbutton" onclick="changer(8);">8</button>
-    <button type="button" class="calcbutton" onclick="changer(9);">9</button>
-    <button type="button" class="calcbutton2" onclick="changer('q');"><?php echo $langs->trans("Qty"); ?></button>
-    <button type="button" class="calcbutton" onclick="changer(4);">4</button>
-    <button type="button" class="calcbutton" onclick="changer(5);">5</button>
-    <button type="button" class="calcbutton" onclick="changer(6);">6</button>
-    <button type="button" class="calcbutton2" onclick="changer('p');"><?php echo $langs->trans("Price"); ?></button>
-    <button type="button" class="calcbutton" onclick="changer(1);">1</button>
-    <button type="button" class="calcbutton" onclick="changer(2);">2</button>
-    <button type="button" class="calcbutton" onclick="changer(3);">3</button>
-    <button type="button" class="calcbutton2" onclick="changer('d');"><?php echo $langs->trans("ReductionShort"); ?></button>
-    <button type="button" class="calcbutton" onclick="changer(0);">0</button>
-    <button type="button" class="calcbutton" onclick="changer('.');">.</button>
-    <button type="button" class="calcbutton" onclick="changer('c');">C</button>
+    <button type="button" class="calcbutton" onclick="Edit(7);">7</button>
+    <button type="button" class="calcbutton" onclick="Edit(8);">8</button>
+    <button type="button" class="calcbutton" onclick="Edit(9);">9</button>
+    <button type="button" id="qty" class="calcbutton2" onclick="Edit('qty');"><?php echo $langs->trans("Qty"); ?></button>
+    <button type="button" class="calcbutton" onclick="Edit(4);">4</button>
+    <button type="button" class="calcbutton" onclick="Edit(5);">5</button>
+    <button type="button" class="calcbutton" onclick="Edit(6);">6</button>
+    <button type="button" class="calcbutton2" onclick="Edit('p');"><?php echo $langs->trans("Price"); ?></button>
+    <button type="button" class="calcbutton" onclick="Edit(1);">1</button>
+    <button type="button" class="calcbutton" onclick="Edit(2);">2</button>
+    <button type="button" class="calcbutton" onclick="Edit(3);">3</button>
+    <button type="button" class="calcbutton2" onclick="Edit('d');"><?php echo $langs->trans("ReductionShort"); ?></button>
+    <button type="button" class="calcbutton" onclick="Edit(0);">0</button>
+    <button type="button" class="calcbutton" onclick="Edit('.');">.</button>
+    <button type="button" class="calcbutton" onclick="Edit('c');">C</button>
     <button type="button" class="calcbutton2" id="delete" style="color: red;" onclick="deleteline();"><b>X</b></button>
 </div>
 

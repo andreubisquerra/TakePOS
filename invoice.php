@@ -80,6 +80,11 @@ if ($action=="deleteline"){
 	$invoice->fetch($placeid);
 }
 
+if ($action=="updateqty"){
+	$invoice->updateline($idline,'','',$number);
+	$invoice->fetch($placeid);
+}
+
 ?>
 <style>
 .selected {
@@ -88,11 +93,14 @@ if ($action=="deleteline"){
 </style>
 <script language="javascript">
 var selectedline=0;
+var selectedtext="";
 $(document).ready(function(){
     $('table tbody tr').click(function(){
 		$('table tbody tr').removeClass("selected");
-		selectedline=this.id;
-		$(this).addClass("selected");
+        $(this).addClass("selected");
+		if (selectedline==this.id) return; // If is already selected
+        else selectedline=this.id;
+        selectedtext=$('#'+selectedline).find("td:first").html();
     });
 });
 
