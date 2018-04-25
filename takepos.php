@@ -165,8 +165,31 @@ function FreeZone(){
 }
 
 function Refresh(){
-	$("#poslines").load("invoice.php?place="+place<?php if ($action==valid) echo "+\"&action=validated&number=".$invoice->facnumber."&id=".$placeid."\""; ?>, function() {
+	$("#poslines").load("invoice.php?place="+place, function() {
 		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+	});
+}
+
+function Search(){
+	$("#poslines").load("invoice.php?action=search&place="+place, function() {
+		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+	});
+}
+
+function Search2(){
+	pageproducts=0;
+	$.getJSON('./ajax.php?action=search&term='+$('#search').val(), function(data) {
+		for (i = 0; i < 30; i++) {
+			if (typeof (data[i]) == "undefined"){
+				$("#prodesc"+i).text("");
+				$("#proimg"+i).attr("src","");
+                $("#prodiv"+i).data("rowid","");
+				continue;
+			}
+			$("#prodesc"+i).text(data[parseInt(i)]['label']);
+			$("#proimg"+i).attr("src","genimg/?query=pro&w=55&h=50&id="+data[i]['id']);
+			$("#prodiv"+i).data("rowid",data[i]['id']);
+		}
 	});
 }
 
@@ -209,6 +232,8 @@ $menus[$r++]=array('title'=>$langs->trans("CloseBill"),
                    'action'=>'CloseBill();');
 $menus[$r++]=array('title'=>$langs->trans("FreeZone"),
                    'action'=>'FreeZone();');
+$menus[$r++]=array('title'=>$langs->trans("Search"),
+                   'action'=>'Search();');
 ?>
 <div style="position:absolute; top:1%; left:65.5%; height:37%; width:32.5%;">
 <?php

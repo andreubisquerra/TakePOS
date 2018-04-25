@@ -122,4 +122,9 @@ if ($action=="valid"){
 	print '<p style="font-size:120%;" align="center"><b>'.$invoice->facnumber." ".$langs->trans('BillShortStatusValidated').'</b></p>';
 	print '<center><button type="button" onclick="Print('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
 }
+if ($action=="search"){
+	print '<center>
+	<input type="text" id="search" onkeydown="Search2();" name="search" style="width:80%;font-size: 150%;" placeholder='.$langs->trans('Search').'
+	</center>';
+}
 print '</div>';

@@ -24,10 +24,27 @@ define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to
 
 $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php");
-$category = GETPOST('category');
 require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 
-$object = new Categorie($db);
-$result=$object->fetch($category);
-$prods = $object->getObjectsInCateg("product");
-echo json_encode($prods);
+$category = GETPOST('category');
+$action = GETPOST('action');
+$term = GETPOST('term');
+
+if ($action=="getProducts"){
+	$object = new Categorie($db);
+	$result=$object->fetch($category);
+	$prods = $object->getObjectsInCateg("product");
+	echo json_encode($prods);
+}
+
+if ($action=="search"){
+	$sql = 'SELECT * FROM '.MAIN_DB_PREFIX.'product';
+	$sql.= ' WHERE entity IN ('.getEntity('product').')';
+	$sql .= natural_search('label', $term);
+	$resql = $db->query($sql);
+	$rows = array();
+	while($row = $db->fetch_array ($resql)){
+		$rows[] = $row;
+	}
+	echo json_encode($rows);
+}
