@@ -306,6 +306,10 @@ $menus[$r++]=array('title'=>$langs->trans("FreeZone"),
                    'action'=>'FreeZone();');
 $menus[$r++]=array('title'=>$langs->trans("Search"),
                    'action'=>'Search();');
+$menus[$r++]=array('title'=>$langs->trans("BackOffice"),
+                   'action'=>'window.location.href=\''.DOL_URL_ROOT.'\';');
+$menus[$r++]=array('title'=>$langs->trans("Logout"),
+                   'action'=>'window.location.href=\''.DOL_URL_ROOT.'/user/logout.php\';');                    
 ?>
 <div style="position:absolute; top:1%; left:65.5%; height:37%; width:32.5%;">
 <?php

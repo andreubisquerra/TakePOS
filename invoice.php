@@ -54,7 +54,7 @@ if ($action=="addline" and $placeid==0)
 {
 	if ($placeid==0) {
 	$invoice = new Facture($db);
-	$invoice->socid=1;
+	$invoice->socid=$conf->global->CASHDESK_ID_THIRDPARTY;
 	$invoice->date=mktime();
 	$invoice->ref="asdf";
 	$placeid=$invoice->create($user);
