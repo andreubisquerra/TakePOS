@@ -81,7 +81,32 @@ if ($action=="deleteline"){
 }
 
 if ($action=="updateqty"){
-	$invoice->updateline($idline,'','',$number);
+    foreach ($invoice->lines as $line){
+        if ($line->id==$idline) $result = $invoice->updateline($line->id, $line->desc, $line->subprice, $number, $line->remise_percent,
+			$line->date_start, $line->date_end, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, 'HT', $line->info_bits, $line->product_type,
+			$line->fk_parent_line, 0, $line->fk_fournprice, $line->pa_ht, $line->label, $line->special_code, $line->array_options, $line->situation_percent,
+			$line->fk_unit);
+    }
+	$invoice->fetch($placeid);
+}
+
+if ($action=="updateprice"){
+    foreach ($invoice->lines as $line){
+        if ($line->id==$idline) $result = $invoice->updateline($line->id, $line->desc, $number, $line->qty, $line->remise_percent,
+			$line->date_start, $line->date_end, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, 'HT', $line->info_bits, $line->product_type,
+			$line->fk_parent_line, 0, $line->fk_fournprice, $line->pa_ht, $line->label, $line->special_code, $line->array_options, $line->situation_percent,
+			$line->fk_unit);
+    }
+	$invoice->fetch($placeid);
+}
+
+if ($action=="updatereduction"){
+    foreach ($invoice->lines as $line){
+        if ($line->id==$idline) $result = $invoice->updateline($line->id, $line->desc, $line->subprice, $line->qty, $number,
+			$line->date_start, $line->date_end, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, 'HT', $line->info_bits, $line->product_type,
+			$line->fk_parent_line, 0, $line->fk_fournprice, $line->pa_ht, $line->label, $line->special_code, $line->array_options, $line->situation_percent,
+			$line->fk_unit);
+    }
 	$invoice->fetch($placeid);
 }
 
@@ -132,7 +157,7 @@ if ($action=="valid"){
 }
 if ($action=="search"){
 	print '<center>
-	<input type="text" id="search" onkeydown="Search2();" name="search" style="width:80%;font-size: 150%;" placeholder='.$langs->trans('Search').'
+	<input type="text" id="search" onkeyup="Search2();" name="search" style="width:80%;font-size: 150%;" placeholder='.$langs->trans('Search').'
 	</center>';
 }
 print '</div>';

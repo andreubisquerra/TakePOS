@@ -170,7 +170,6 @@ function Refresh(){
 	$("#poslines").load("invoice.php?place="+place, function() {
 		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
 	});
-    $("#qty").html("<?php echo $langs->trans("Qty"); ?>");
 }
 
 function Search(){
@@ -190,8 +189,8 @@ function Search2(){
 				continue;
 			}
 			$("#prodesc"+i).text(data[parseInt(i)]['label']);
-			$("#proimg"+i).attr("src","genimg/?query=pro&w=55&h=50&id="+data[i]['id']);
-			$("#prodiv"+i).data("rowid",data[i]['id']);
+			$("#proimg"+i).attr("src","genimg/?query=pro&w=55&h=50&id="+data[i]['rowid']);
+			$("#prodiv"+i).data("rowid",data[i]['rowid']);
 		}
 	});
 }
@@ -204,10 +203,11 @@ function Edit(number){
         return;
     }
     else if (number=='qty'){
-        if (editaction=='qty'){
+        if (editaction=='qty' && editnumber!=""){
             $("#poslines").load("invoice.php?action=updateqty&place="+place+"&idline="+selectedline+"&number="+editnumber, function() {
                 editnumber="";
                 $('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+                $("#qty").html("<?php echo $langs->trans("Qty"); ?>");
             });
             return;
         }
@@ -215,12 +215,52 @@ function Edit(number){
             editaction="qty";
         }
     }
+    else if (number=='p'){
+        if (editaction=='p' && editnumber!=""){
+            $("#poslines").load("invoice.php?action=updateprice&place="+place+"&idline="+selectedline+"&number="+editnumber, function() {
+                editnumber="";
+                $('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+                $("#price").html("<?php echo $langs->trans("Price"); ?>");
+            });
+            return;
+        }
+        else {
+            editaction="p";
+        }
+    }
+    else if (number=='r'){
+        if (editaction=='r' && editnumber!=""){
+            $("#poslines").load("invoice.php?action=updatereduction&place="+place+"&idline="+selectedline+"&number="+editnumber, function() {
+                editnumber="";
+                $('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+                $("#reduction").html("<?php echo $langs->trans("ReductionShort"); ?>");
+            });
+            return;
+        }
+        else {
+            editaction="r";
+        }
+    }
     else {
         editnumber=editnumber+number;
     }
     if (editaction=='qty'){
-        text=text+"Nueva cantidad: ";
+        text=text+"<?php echo $langs->trans("Modify")." -> ".$langs->trans("Qty").": "; ?>";
         $("#qty").html("OK");
+        $("#price").html("<?php echo $langs->trans("Price"); ?>");
+        $("#reduction").html("<?php echo $langs->trans("ReductionShort"); ?>");
+    }
+    if (editaction=='p'){
+        text=text+"<?php echo $langs->trans("Modify")." -> ".$langs->trans("Price").": "; ?>";
+        $("#qty").html("<?php echo $langs->trans("Qty"); ?>");
+        $("#price").html("OK");
+        $("#reduction").html("<?php echo $langs->trans("ReductionShort"); ?>");
+    }
+    if (editaction=='r'){
+        text=text+"<?php echo $langs->trans("Modify")." -> ".$langs->trans("ReductionShort").": "; ?>";
+        $("#qty").html("<?php echo $langs->trans("Qty"); ?>");
+        $("#price").html("<?php echo $langs->trans("Price"); ?>");
+        $("#reduction").html("OK");
     }
     $('#'+selectedline).find("td:first").html(text+editnumber);
 }
@@ -245,11 +285,11 @@ $( document ).ready(function() {
     <button type="button" class="calcbutton" onclick="Edit(4);">4</button>
     <button type="button" class="calcbutton" onclick="Edit(5);">5</button>
     <button type="button" class="calcbutton" onclick="Edit(6);">6</button>
-    <button type="button" class="calcbutton2" onclick="Edit('p');"><?php echo $langs->trans("Price"); ?></button>
+    <button type="button" id="price" class="calcbutton2" onclick="Edit('p');"><?php echo $langs->trans("Price"); ?></button>
     <button type="button" class="calcbutton" onclick="Edit(1);">1</button>
     <button type="button" class="calcbutton" onclick="Edit(2);">2</button>
     <button type="button" class="calcbutton" onclick="Edit(3);">3</button>
-    <button type="button" class="calcbutton2" onclick="Edit('d');"><?php echo $langs->trans("ReductionShort"); ?></button>
+    <button type="button" id="reduction" class="calcbutton2" onclick="Edit('r');"><?php echo $langs->trans("ReductionShort"); ?></button>
     <button type="button" class="calcbutton" onclick="Edit(0);">0</button>
     <button type="button" class="calcbutton" onclick="Edit('.');">.</button>
     <button type="button" class="calcbutton" onclick="Edit('c');">C</button>
