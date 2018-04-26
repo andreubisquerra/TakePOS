@@ -30,6 +30,7 @@ $place = GETPOST('place');
 $number = GETPOST('number');
 $idline = GETPOST('idline');
 $desc = GETPOST('desc');
+$pay = GETPOST('pay');
 
 $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$place'";
 $resql = $db->query($sql);
@@ -46,6 +47,8 @@ else{
  */
 
 if ($action == 'valid' && $user->rights->facture->creer){
+	if ($pay=="cash") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CASH;
+	else if ($pay=="card") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CB;
 	$now=dol_now();
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
@@ -53,12 +56,13 @@ if ($action == 'valid' && $user->rights->facture->creer){
 	// Add the payment
 	$payment=new Paiement($db);
 	$payment->datepaye=$now;
-	$payment->bank_account=$conf->global->CASHDESK_ID_BANKACCOUNT_CASH;
+	$payment->bank_account=$bankaccount;
 	$payment->amounts[$invoice->id]=$invoice->total_ttc;
-	$payment->paiementid=$invoice->mode_reglement_id;
+	if ($pay=="cash") $payment->paiementid=4;
+	else if ($pay=="card") $payment->paiementid=6;
 	$payment->num_paiement='';
 	$payment->create($user);
-	$payment->addPaymentToBank($user, 'payment', '(CustomerInvoicePayment)', $conf->global->CASHDESK_ID_BANKACCOUNT_CASH, '', '');
+	$payment->addPaymentToBank($user, 'payment', '(CustomerInvoicePayment)', $bankaccount, '', '');
 	$invoice->set_paid($user);
 }
 
