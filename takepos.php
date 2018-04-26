@@ -162,6 +162,10 @@ function CloseBill(){
 	$.colorbox({href:"pay.php?place="+place, width:"80%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("CloseBill");?>"});
 }
 
+function Floors(){
+	$.colorbox({href:"floors.php?place="+place, width:"90%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("Floors");?>"});
+}
+
 function FreeZone(){
 	$.colorbox({href:"freezone.php?place="+place, onClosed: function () { Refresh(); },width:"80%", height:"30%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("FreeZone");?>"});
 }
@@ -309,7 +313,11 @@ $menus[$r++]=array('title'=>$langs->trans("Search"),
 $menus[$r++]=array('title'=>$langs->trans("BackOffice"),
                    'action'=>'window.location.href=\''.DOL_URL_ROOT.'\';');
 $menus[$r++]=array('title'=>$langs->trans("Logout"),
-                   'action'=>'window.location.href=\''.DOL_URL_ROOT.'/user/logout.php\';');                    
+                   'action'=>'window.location.href=\''.DOL_URL_ROOT.'/user/logout.php\';');
+if($conf->global->TAKEPOS_BAR_RESTAURANT){				   
+	$menus[$r++]=array('title'=>$langs->trans("Floors"),
+					'action'=>'Floors();');
+}					
 ?>
 <div style="position:absolute; top:1%; left:65.5%; height:37%; width:32.5%;">
 <?php

@@ -60,6 +60,7 @@ if (GETPOST('action','alpha') == 'set')
 	$res = dolibarr_set_const($db,"CASHDESK_NO_DECREASE_STOCK",GETPOST('CASHDESK_NO_DECREASE_STOCK','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"CASHDESK_SERVICES", GETPOST('CASHDESK_SERVICES','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"CASHDESK_DOLIBAR_RECEIPT_PRINTER", GETPOST('CASHDESK_DOLIBAR_RECEIPT_PRINTER','alpha'),'chaine',0,'',$conf->entity);
+	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);	
 
 	dol_syslog("admin/cashdesk: level ".GETPOST('level','alpha'));
 
@@ -181,6 +182,14 @@ if (! empty($conf->receiptprinter->enabled))
     print $form->selectyesno("CASHDESK_DOLIBAR_RECEIPT_PRINTER",$conf->global->CASHDESK_DOLIBAR_RECEIPT_PRINTER,1);
     print "</td></tr>\n";
 }
+
+// Bar Restaurant mode
+$var=! $var;
+    print '<tr class="oddeven"><td>';
+    print 'Bar Restaurant';
+    print '<td colspan="2">';
+    print $form->selectyesno("TAKEPOS_BAR_RESTAURANT",$conf->global->TAKEPOS_BAR_RESTAURANT,1);
+    print "</td></tr>\n";
 
 print '</table>';
 print '<br>';

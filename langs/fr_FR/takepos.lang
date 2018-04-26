@@ -17,32 +17,6 @@
 # Générique
 #
 
-# Module label 'ModuleTakePosName'
-ModuleTakePosName = TakePos
-# Module description 'ModuleTakePosDesc'
-ModuleTakePosDesc = Description de TakePos
-
-#
-# Page d'administration
-#
-TakePosSetup = Configuration du module TakePos
-Settings = Réglages
-TakePosSetupPage = Page de configuration du module TakePos
-
-#
-# Page À propos
-#
-About = À propos
-TakePosAbout = À propos de TakePos
-TakePosAboutPage = Page à propos de TakePos
-
-#
-# Page d'exemple
-#
-MyPageName = Nom de ma page
-
-#
-# Box d'exemple
-#
-MyWidget = Mon widget
-MyWidgetDescription = Description de mon widget
+CloseBill=Fermer Bill
+Floors=Planchers
+AddTable=Ajouter une table
