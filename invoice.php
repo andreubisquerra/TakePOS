@@ -20,6 +20,7 @@ define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to
 $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php");
 require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
 $langs->load("bills");
 $langs->load("cashdesk");
 $id = GETPOST('id');
@@ -45,9 +46,20 @@ else{
  */
 
 if ($action == 'valid' && $user->rights->facture->creer){
+	$now=dol_now();
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
 	$invoice->validate($user);
+	// Add the payment
+	$payment=new Paiement($db);
+	$payment->datepaye=$now;
+	$payment->bank_account=$conf->global->CASHDESK_ID_BANKACCOUNT_CASH;
+	$payment->amounts[$invoice->id]=$invoice->total_ttc;
+	$payment->paiementid=$invoice->mode_reglement_id;
+	$payment->num_paiement='';
+	$payment->create($user);
+	$payment->addPaymentToBank($user, 'payment', '(CustomerInvoicePayment)', $conf->global->CASHDESK_ID_BANKACCOUNT_CASH, '', '');
+	$invoice->set_paid($user);
 }
 
 if ($action=="addline" and $placeid==0)
