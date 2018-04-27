@@ -28,50 +28,47 @@ $top = GETPOST('top');
 $place = GETPOST('place');
 $after = GETPOST('after');
 $mode = GETPOST('mode');
-$user->getrights();
 
+if ($action=="getTables"){
+    $sql="SELECT * from ".MAIN_DB_PREFIX."takepos_floor_tables where floor=$floor";
+    $resql = $db->query($sql);
+    $rows = array();
+    while($row = $db->fetch_array ($resql)){
+        if ($row['label']=="") $row['label']=$row['rowid'];
+        $rows[] = $row;
+    }  
+    echo json_encode($rows);
+    exit;
+}
 
 if ($action=="update")
 {
-if ($left>95) $left=95;
-if ($top>95) $top=95;
-if ($left>3 or $top>4)
-{
-$db->begin();
-$db->query("update ".MAIN_DB_PREFIX."pos_places set left_pos=$left, top_pos=$top where name='$place'");
-$db->commit();
-}
-else
-{
-$db->begin();
-$db->query("delete from ".MAIN_DB_PREFIX."pos_places where name='$place'");
-$db->commit();
-}
+    if ($left>95) $left=95;
+    if ($top>95) $top=95;
+    if ($left>3 or $top>4)
+    {
+        $db->begin();
+        $db->query("update ".MAIN_DB_PREFIX."takepos_floor_tables set left_pos=$left, top_pos=$top where name='$place'");
+        $db->commit();
+    }
+    else
+    {
+        $db->begin();
+        $db->query("delete from ".MAIN_DB_PREFIX."takepos_floor_tables where name='$place'");
+        $db->commit();
+    }
 }
 
 if ($action=="updatename")
 {
-$db->begin();
-$db->query("update ".MAIN_DB_PREFIX."pos_places set name='$after' where name='$place'");
-$db->commit();
+    $db->begin();
+    $db->query("update ".MAIN_DB_PREFIX."takepos_floor_tables set name='$after' where name='$place'");
+    $db->commit();
 }
 
 if ($action=="add")
 {
-$sql="SELECT name from ".MAIN_DB_PREFIX."pos_places";
-$resql = $db->query($sql);
-$data = array();
-$i=0;
-while ($row = $db->fetch_array ($resql)) {
-    $data[$i++]= $row[0];
-}
-$data[$i++]= 0;
-$nextplace=max(array_values($data));
-$nextplace++;
-$db->begin();
-$db->query("insert into ".MAIN_DB_PREFIX."pos_places (name, left_pos, top_pos, zone) values ('$nextplace', '25', '25', $floor)");
-$db->commit();
-exit;
+    $db->query("insert into ".MAIN_DB_PREFIX."takepos_floor_tables values ('', '', '', '50', '50', $floor)");
 }
 
 // Title
@@ -122,51 +119,51 @@ function updatename(before) {
 		});
 	}
 	
-				//Get places
-			$.getJSON('./floors.php?zone=<?php echo $floor; ?>', function(data) {
-				$.each(data, function(key, val) {
-				$('body').append('<div class="tablediv" contenteditable onblur="updatename('+val.place+');" style="position: absolute; left: '+val.left_pos+'%; top: '+val.top_pos+'%;" id="'+val.place+'">'+val.place+'</div>');
-				$( "#"+val.place ).draggable(
+    
+$( document ).ready(function() {
+	$.getJSON('./floors.php?action=getTables&zone=<?php echo $floor; ?>', function(data) {
+        $.each(data, function(key, val) {
+			$('body').append('<div class="tablediv" contenteditable onblur="updatename('+val.label+');" style="position: absolute; left: '+val.left_pos+'%; top: '+val.top_pos+'%;" id="'+val.label+'">'+val.label+'</div>');
+			$( "#"+val.label ).draggable(
 				{
 					start: function() {
 					$("#add").attr("src","./img/delete.jpg");
 					$("#addcaption").html(DragDrop);
-					
-					},
+                    },
 					stop: function() {
 					var left=$(this).offset().left*100/$(window).width();
 					var top=$(this).offset().top*100/$(window).height();
 					updateplace($(this).attr('id'), left, top);
 					}
-					}
-					);
+				}
+			);
 					
-					//simultaneous draggable and contenteditable
-					$('#'+val.place).draggable().bind('click', function(){
-					$(this).focus();
-					})
-					
-					});
-					});
-	</script>
-	</head>
-	<body style="overflow: hidden">
-	<?php if ($user->admin){?>
-	<div style="position: absolute; left: 0.1%; top: 0.8%; width:8%; height:11%;">
-	<?php if ($mode=="edit"){?>
-	<a onclick="window.location.href='floors.php?mode=edit&action=add';"><?php echo $langs->trans("AddTable"); ?></a>
-	<?php } else { ?>
-	<a onclick="window.location.href='floors.php?mode=edit';"><?php echo $langs->trans("Edit"); ?></a>
-	<?php } ?>
-	</div>
-	<?php } ?>
+			//simultaneous draggable and contenteditable
+			$('#'+val.label).draggable().bind('click', function(){
+				$(this).focus();
+			})
+		});
+	});
+});
 
-	</div>
-	
-	<div style="position: absolute; left: 25%; bottom: 6%; width:50%; height:3%;">
-	<center>
-	<h1><img src="./img/arrow-prev.png" width="5%" onclick="location.href='floors.php?floor=<?php if ($floor>1) { $floor--; echo $floor; $floor++;} else echo "1"; ?>';"><?php echo $langs->trans("Floor")." ".$floor; ?><img src="./img/arrow-next.png" width="5%" onclick="location.href='floors.php?floor=<?php $floor++; echo $floor; ?>';"></h1>
-	</center>
-	</div>
-	</body>
+</script>
+</head>
+<body style="overflow: hidden">
+<?php if ($user->admin){?>
+<div style="position: absolute; left: 0.1%; top: 0.8%; width:8%; height:11%;">
+<?php if ($mode=="edit"){?>
+<a onclick="window.location.href='floors.php?mode=edit&action=add';"><?php echo $langs->trans("AddTable"); ?></a>
+<?php } else { ?>
+<a onclick="window.location.href='floors.php?mode=edit';"><?php echo $langs->trans("Edit"); ?></a>
+<?php } ?>
+</div>
+<?php } 
+?>
+
+<div style="position: absolute; left: 25%; bottom: 6%; width:50%; height:3%;">
+    <center>
+    <h1><img src="./img/arrow-prev.png" width="5%" onclick="location.href='floors.php?floor=<?php if ($floor>1) { $floor--; echo $floor; $floor++;} else echo "1"; ?>';"><?php echo $langs->trans("Floor")." ".$floor; ?><img src="./img/arrow-next.png" width="5%" onclick="location.href='floors.php?floor=<?php $floor++; echo $floor; ?>';"></h1>
+    </center>
+</div>
+</body>
 </html>

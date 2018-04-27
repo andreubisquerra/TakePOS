@@ -14,11 +14,13 @@
 -- along with this program.  If not, see http://www.gnu.org/licenses/.
 
 
--- BEGIN MODULEBUILDER INDEXES
-ALTER TABLE llx_takepos_myobject ADD INDEX idx_fieldobject (fieldobject);
--- END MODULEBUILDER INDEXES
-
---ALTER TABLE llx_takepos_myobject ADD UNIQUE INDEX uk_takepos_myobject_fieldxyz(fieldx, fieldy);
-
---ALTER TABLE llx_takepos_myobject ADD CONSTRAINT llx_takepos_myobject_field_id FOREIGN KEY (fk_field) REFERENCES llx_myotherobject(rowid);
-
+CREATE TABLE llx_takepos_floor_tables(
+	-- BEGIN MODULEBUILDER FIELDS
+	rowid INTEGER AUTO_INCREMENT PRIMARY KEY,
+	entity INTEGER DEFAULT 1 NOT NULL,
+	label VARCHAR(255),
+    leftpos float,
+    toppos	float,
+    floor int(3)
+	-- END MODULEBUILDER FIELDS
+) ENGINE=innodb;
