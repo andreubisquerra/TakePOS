@@ -26,9 +26,8 @@ $action = GETPOST('action');
 $left = GETPOST('left');
 $top = GETPOST('top');
 $place = GETPOST('place');
-$floor = GETPOST('floor');
 $after = GETPOST('after');
-$result=$user->fetch('','admin');
+$mode = GETPOST('mode');
 $user->getrights();
 
 
@@ -109,8 +108,8 @@ function updateplace(idplace, left, top) {
 		data: { action: "update", left: left, top: top, place: idplace }
 		}).done(function( msg ) {
 		window.location.reload()
-		});
-	}
+	});
+}
 	
 function updatename(before) {
 	var after=$("#"+before).text();
@@ -152,21 +151,15 @@ function updatename(before) {
 	</script>
 	</head>
 	<body style="overflow: hidden">
-	<div style="position: absolute; left: 0.1%; top: 0.8%; width:8%; height:11%;" onclick='
-	$.ajax({
-		type: "POST",
-		url: "floors.php",
-		data: { action: "add", zone: <?php echo $floor; ?> }
-		}).done(function( msg ) {
-		window.location.reload()
-		});'>
-	<div class='wrapper3' style="width:100%;height:100%;" id="setup">
-		<img src='<?php echo DOL_URL_ROOT;?>/holiday/img/add.png' width="100%" height="100%" border="1" id='deleteimg'/>
-		<div class='description2'>
-		<div class='description_content' id="addcaption"><?php echo $langs->trans("AddTable"); ?></div>
-		</div>
+	<?php if ($user->admin){?>
+	<div style="position: absolute; left: 0.1%; top: 0.8%; width:8%; height:11%;">
+	<?php if ($mode=="edit"){?>
+	<a onclick="window.location.href='floors.php?mode=edit&action=add';"><?php echo $langs->trans("AddTable"); ?></a>
+	<?php } else { ?>
+	<a onclick="window.location.href='floors.php?mode=edit';"><?php echo $langs->trans("Edit"); ?></a>
+	<?php } ?>
 	</div>
-
+	<?php } ?>
 
 	</div>
 	

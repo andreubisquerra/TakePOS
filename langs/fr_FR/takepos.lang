@@ -18,5 +18,6 @@
 #
 
 CloseBill=Fermer Bill
-Floors=Planchers
+Floors=Étages
+Floor=Étage
 AddTable=Ajouter une table
