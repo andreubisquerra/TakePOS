@@ -24,6 +24,7 @@ require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
 
 $place = GETPOST('place');
+if ($place=="") $place="0";
 $action = GETPOST('action');
 
 $langs->load("main");
@@ -49,7 +50,7 @@ var categories = JSON.parse( '<?php echo json_encode($categories);?>' );
 var currentcat;
 var pageproducts=0;
 var pagecategories=0;
-var place="0";
+var place="<?php echo $place;?>";
 var editaction="qty";
 var editnumber="";
 function PrintCategories(first){

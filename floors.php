@@ -26,7 +26,7 @@ $action = GETPOST('action');
 $left = GETPOST('left');
 $top = GETPOST('top');
 $place = GETPOST('place');
-$after = GETPOST('after');
+$newname = GETPOST('newname');
 $mode = GETPOST('mode');
 
 if ($action=="getTables"){
@@ -34,7 +34,6 @@ if ($action=="getTables"){
     $resql = $db->query($sql);
     $rows = array();
     while($row = $db->fetch_array ($resql)){
-        if ($row['label']=="") $row['label']=$row['rowid'];
         $rows[] = $row;
     }  
     echo json_encode($rows);
@@ -45,30 +44,21 @@ if ($action=="update")
 {
     if ($left>95) $left=95;
     if ($top>95) $top=95;
-    if ($left>3 or $top>4)
-    {
-        $db->begin();
-        $db->query("update ".MAIN_DB_PREFIX."takepos_floor_tables set left_pos=$left, top_pos=$top where name='$place'");
-        $db->commit();
-    }
-    else
-    {
-        $db->begin();
-        $db->query("delete from ".MAIN_DB_PREFIX."takepos_floor_tables where name='$place'");
-        $db->commit();
-    }
+    if ($left>3 or $top>4) $db->query("update ".MAIN_DB_PREFIX."takepos_floor_tables set leftpos=$left, toppos=$top where label='$place'");
+    else $db->query("delete from ".MAIN_DB_PREFIX."takepos_floor_tables where label='$place'");
 }
 
 if ($action=="updatename")
 {
-    $db->begin();
-    $db->query("update ".MAIN_DB_PREFIX."takepos_floor_tables set name='$after' where name='$place'");
-    $db->commit();
+	$newname = preg_replace("/[^a-zA-Z0-9\s]/", "", $newname); // Only English chars
+	if (strlen($newname) > 3) $newname = substr($newname, 0, 3); // Only 3 chars
+    $db->query("update ".MAIN_DB_PREFIX."takepos_floor_tables set label='$newname' where label='$place'");
 }
 
 if ($action=="add")
 {
-    $db->query("insert into ".MAIN_DB_PREFIX."takepos_floor_tables values ('', '', '', '50', '50', $floor)");
+    $asdf=$db->query("insert into ".MAIN_DB_PREFIX."takepos_floor_tables values ('', '', '', '45', '45', $floor)");
+	$db->query("update ".MAIN_DB_PREFIX."takepos_floor_tables set label=rowid where label=''"); // No empty table names
 }
 
 // Title
@@ -104,7 +94,7 @@ function updateplace(idplace, left, top) {
 		url: "floors.php",
 		data: { action: "update", left: left, top: top, place: idplace }
 		}).done(function( msg ) {
-		window.location.reload()
+		window.location.href='floors.php?mode=edit&floor=<?php echo $floor;?>';
 	});
 }
 	
@@ -113,22 +103,26 @@ function updatename(before) {
 	$.ajax({
 		type: "POST",
 		url: "floors.php",
-		data: { action: "updatename", place: before, after: after }
+		data: { action: "updatename", place: before, newname: after }
 		}).done(function( msg ) {
-		window.location.reload()
+		window.location.href='floors.php?mode=edit&floor=<?php echo $floor;?>';
 		});
 	}
 	
+function LoadPlace(place){
+	parent.location.href='takepos.php?place='+place;
+}	
+	
     
 $( document ).ready(function() {
-	$.getJSON('./floors.php?action=getTables&zone=<?php echo $floor; ?>', function(data) {
+	$.getJSON('./floors.php?action=getTables&floor=<?php echo $floor; ?>', function(data) {
         $.each(data, function(key, val) {
-			$('body').append('<div class="tablediv" contenteditable onblur="updatename('+val.label+');" style="position: absolute; left: '+val.left_pos+'%; top: '+val.top_pos+'%;" id="'+val.label+'">'+val.label+'</div>');
+			<?php if ($mode=="edit"){?>
+			$('body').append('<div class="tablediv" contenteditable onblur="updatename('+val.label+');" style="position: absolute; left: '+val.leftpos+'%; top: '+val.toppos+'%;" id="'+val.label+'">'+val.label+'</div>');
 			$( "#"+val.label ).draggable(
 				{
 					start: function() {
-					$("#add").attr("src","./img/delete.jpg");
-					$("#addcaption").html(DragDrop);
+					$("#add").html("<?php echo $langs->trans("Delete"); ?>");
                     },
 					stop: function() {
 					var left=$(this).offset().left*100/$(window).width();
@@ -137,11 +131,14 @@ $( document ).ready(function() {
 					}
 				}
 			);
-					
 			//simultaneous draggable and contenteditable
 			$('#'+val.label).draggable().bind('click', function(){
 				$(this).focus();
 			})
+			<?php }
+			else {?>
+			$('body').append('<div class="tablediv" onclick="LoadPlace('+val.label+');" style="position: absolute; left: '+val.leftpos+'%; top: '+val.toppos+'%;" id="'+val.label+'">'+val.label+'</div>');
+			<?php } ?>
 		});
 	});
 });
@@ -152,9 +149,9 @@ $( document ).ready(function() {
 <?php if ($user->admin){?>
 <div style="position: absolute; left: 0.1%; top: 0.8%; width:8%; height:11%;">
 <?php if ($mode=="edit"){?>
-<a onclick="window.location.href='floors.php?mode=edit&action=add';"><?php echo $langs->trans("AddTable"); ?></a>
+<a id="add" onclick="window.location.href='floors.php?mode=edit&action=add&floor=<?php echo $floor;?>';"><?php echo $langs->trans("AddTable"); ?></a>
 <?php } else { ?>
-<a onclick="window.location.href='floors.php?mode=edit';"><?php echo $langs->trans("Edit"); ?></a>
+<a onclick="window.location.href='floors.php?mode=edit&floor=<?php echo $floor;?>';"><?php echo $langs->trans("Edit"); ?></a>
 <?php } ?>
 </div>
 <?php } 

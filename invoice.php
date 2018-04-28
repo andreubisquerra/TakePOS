@@ -166,7 +166,9 @@ if ($placeid>0) foreach ($invoice->lines as $line)
 	print '</tr>';
 }
 print '</table>';
-print '<p style="font-size:120%;" align="right"><b>'.$langs->trans('TotalTTC').': '.price($invoice->total_ttc, 1, '', 1, - 1, - 1, $conf->currency).'&nbsp;</b></p>';
+print '<p style="font-size:120%;" align="right"><b>'.$langs->trans('TotalTTC');
+if($conf->global->TAKEPOS_BAR_RESTAURANT) print " ".$langs->trans('Place')." ".$place;
+print ': '.price($invoice->total_ttc, 1, '', 1, - 1, - 1, $conf->currency).'&nbsp;</b></p>';
 if ($action=="valid"){
 	print '<p style="font-size:120%;" align="center"><b>'.$invoice->facnumber." ".$langs->trans('BillShortStatusValidated').'</b></p>';
 	print '<center><button type="button" onclick="Print('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
