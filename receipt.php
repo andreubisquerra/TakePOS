@@ -52,8 +52,9 @@ $object->fetch($facid);
         <p class="date_heure"><?php
         // Recuperation et affichage de la date et de l'heure
         $now = dol_now();
-        print dol_print_date($now,'dayhourtext').'<br>';
-        print $object->ref;
+        print $langs->trans('Date')." ".dol_print_date($object->date, 'day').'<br>';
+        if ($mysoc->country_code == 'ES') print "Factura simplificada ";
+		print $object->ref;
         ?></p>
     </div>
 </div>
