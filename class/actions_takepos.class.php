@@ -105,20 +105,19 @@ class ActionsTakePos
 	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
-	public function doMassActions($parameters, &$object, &$action, $hookmanager)
+	public function addMoreActionsButtons($parameters, &$object, &$action, $hookmanager)
 	{
 	    global $conf, $user, $langs;
 
 	    $error = 0; // Error counter
-
+			
         /* print_r($parameters); print_r($object); echo "action: " . $action; */
-	    if (in_array($parameters['currentcontext'], array('somecontext1','somecontext2')))		// do something only for the context 'somecontext1' or 'somecontext2'
+	    if (in_array($parameters['currentcontext'], array('invoicecard')))		// do something only for the context 'somecontext1' or 'somecontext2'
 	    {
-	        foreach($parameters['toselect'] as $objectid)
-	        {
-	            // Do action on each object id
-
-	        }
+			
+			if (file_exists("../../takepos/receipt.php")) $receipt_url=DOL_URL_ROOT."/takepos/receipt.php";
+			if (file_exists("../../custom/takepos/receipt.php")) $receipt_url=DOL_URL_ROOT."/custom/takepos/receipt.php";
+	        print '<div class="inline-block divButAction"><a target="_blank" class="butAction" href="' . $receipt_url . '?facid=' . $object->id.'">' . $langs->trans('Ticket') .'</a></div>';
 	    }
 
 	    if (! $error) {
