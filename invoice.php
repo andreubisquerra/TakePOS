@@ -60,7 +60,7 @@ if ($action == 'valid' && $user->rights->facture->creer){
 	$payment->amounts[$invoice->id]=$invoice->total_ttc;
 	if ($pay=="cash") $payment->paiementid=4;
 	else if ($pay=="card") $payment->paiementid=6;
-	$payment->num_paiement='';
+	$payment->num_paiement=$invoice->facnumber;
 	$payment->create($user);
 	$payment->addPaymentToBank($user, 'payment', '(CustomerInvoicePayment)', $bankaccount, '', '');
 	$invoice->set_paid($user);
