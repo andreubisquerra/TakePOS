@@ -59,7 +59,7 @@ if (GETPOST('action','alpha') == 'set')
 	$res = dolibarr_set_const($db,"CASHDESK_ID_WAREHOUSE",(GETPOST('CASHDESK_ID_WAREHOUSE','alpha') > 0 ? GETPOST('CASHDESK_ID_WAREHOUSE','alpha') : ''),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"CASHDESK_NO_DECREASE_STOCK",GETPOST('CASHDESK_NO_DECREASE_STOCK','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"CASHDESK_SERVICES", GETPOST('CASHDESK_SERVICES','alpha'),'chaine',0,'',$conf->entity);
-	$res = dolibarr_set_const($db,"CASHDESK_DOLIBAR_RECEIPT_PRINTER", GETPOST('CASHDESK_DOLIBAR_RECEIPT_PRINTER','alpha'),'chaine',0,'',$conf->entity);
+	$res = dolibarr_set_const($db,"TAKEPOS_RECEIPT_PRINTER", GETPOST('TAKEPOS_RECEIPT_PRINTER','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);	
 
 	dol_syslog("admin/cashdesk: level ".GETPOST('level','alpha'));
@@ -172,24 +172,21 @@ if (! empty($conf->service->enabled))
     print "</td></tr>\n";
 }
 
-// Use Dolibarr Receipt Printer
-if (! empty($conf->receiptprinter->enabled))
-{
-    $var=! $var;
-    print '<tr class="oddeven"><td>';
-    print $langs->trans("DolibarrReceiptPrinter").' ('.$langs->trans("FeatureNotYetAvailable").')';
-    print '<td colspan="2">';
-    print $form->selectyesno("CASHDESK_DOLIBAR_RECEIPT_PRINTER",$conf->global->CASHDESK_DOLIBAR_RECEIPT_PRINTER,1);
-    print "</td></tr>\n";
-}
+// Use Takepos printing
+$var=! $var;
+print '<tr class="oddeven"><td>';
+print $langs->trans("DolibarrReceiptPrinter").' (with TakePOS Printing App)';
+print '<td colspan="2">';
+print $form->selectyesno("TAKEPOS_RECEIPT_PRINTER",$conf->global->TAKEPOS_RECEIPT_PRINTER,1);
+print "</td></tr>\n";
 
 // Bar Restaurant mode
 $var=! $var;
-    print '<tr class="oddeven"><td>';
-    print 'Bar Restaurant';
-    print '<td colspan="2">';
-    print $form->selectyesno("TAKEPOS_BAR_RESTAURANT",$conf->global->TAKEPOS_BAR_RESTAURANT,1);
-    print "</td></tr>\n";
+print '<tr class="oddeven"><td>';
+print 'Bar Restaurant';
+print '<td colspan="2">';
+print $form->selectyesno("TAKEPOS_BAR_RESTAURANT",$conf->global->TAKEPOS_BAR_RESTAURANT,1);
+print "</td></tr>\n";
 
 print '</table>';
 print '<br>';

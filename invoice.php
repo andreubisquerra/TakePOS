@@ -148,6 +148,19 @@ $(document).ready(function(){
 function Print(id){
 	$.colorbox({href:"receipt.php?facid="+id, width:"80%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("PrintTicket");?>"});
 }
+
+function TakeposPrinting(id){
+	var receipt;
+	$.get("receipt.php?facid="+id, function(data, status){
+        receipt=data.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '<br />');;
+		$.ajax({
+			type: "POST",
+			url: 'http://127.0.0.1:8111/print',
+			data: receipt
+		});
+    });
+	
+}
 </script>
 <?php
 print '<div class="div-table-responsive-no-min">';
@@ -171,7 +184,8 @@ if($conf->global->TAKEPOS_BAR_RESTAURANT) print " ".$langs->trans('Place')." ".$
 print ': '.price($invoice->total_ttc, 1, '', 1, - 1, - 1, $conf->currency).'&nbsp;</b></p>';
 if ($action=="valid"){
 	print '<p style="font-size:120%;" align="center"><b>'.$invoice->facnumber." ".$langs->trans('BillShortStatusValidated').'</b></p>';
-	print '<center><button type="button" onclick="Print('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
+	if ($conf->global->TAKEPOS_RECEIPT_PRINTER) print '<center><button type="button" onclick="TakeposPrinting('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
+	else print '<center><button type="button" onclick="Print('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
 }
 if ($action=="search"){
 	print '<center>
