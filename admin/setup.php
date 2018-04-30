@@ -60,7 +60,8 @@ if (GETPOST('action','alpha') == 'set')
 	$res = dolibarr_set_const($db,"CASHDESK_NO_DECREASE_STOCK",GETPOST('CASHDESK_NO_DECREASE_STOCK','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"CASHDESK_SERVICES", GETPOST('CASHDESK_SERVICES','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEPOS_RECEIPT_PRINTER", GETPOST('TAKEPOS_RECEIPT_PRINTER','alpha'),'chaine',0,'',$conf->entity);
-	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);	
+	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);
+    $res = dolibarr_set_const($db,"TAKEPOS_PRINT_SERVER", GETPOST('TAKEPOS_PRINT_SERVER','alpha'),'chaine',0,'',$conf->entity);
 
 	dol_syslog("admin/cashdesk: level ".GETPOST('level','alpha'));
 
@@ -175,10 +176,18 @@ if (! empty($conf->service->enabled))
 // Use Takepos printing
 $var=! $var;
 print '<tr class="oddeven"><td>';
-print $langs->trans("DolibarrReceiptPrinter").' (with TakePOS Printing App)';
+print $langs->trans("DolibarrReceiptPrinter").' (<a href="http://www.takepos.com/takeposprinting">TakePOS Printing App</a>)';
 print '<td colspan="2">';
 print $form->selectyesno("TAKEPOS_RECEIPT_PRINTER",$conf->global->TAKEPOS_RECEIPT_PRINTER,1);
 print "</td></tr>\n";
+
+if ($conf->global->TAKEPOS_RECEIPT_PRINTER){
+    print '<tr class="oddeven value"><td>';
+    print $langs->trans("IPAddress").' (<a href="http://www.takepos.com/takeposprinting">TakePOS Printing App</a>)';
+    print '<td colspan="2">';
+    print '<input type="text" size="20" id="TAKEPOS_PRINT_SERVER" name="TAKEPOS_PRINT_SERVER" value="'.$conf->global->TAKEPOS_PRINT_SERVER.'">';
+    print '</td></tr>';
+}
 
 // Bar Restaurant mode
 $var=! $var;

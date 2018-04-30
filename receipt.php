@@ -41,9 +41,6 @@ $object->fetch($facid);
 <body>
 
 <div class="entete">
-    <div class="logo">
-        <?php print '<img src="'.DOL_URL_ROOT.'/viewimage.php?modulepart=mycompany&amp;file='.urlencode('/thumbs/'.$mysoc->logo_small).'">'; ?>
-    </div>
     <div class="infos">
         <p class="address"><?php echo $mysoc->name; ?><br>
         <?php print dol_nl2br(dol_format_address($mysoc)); ?><br>

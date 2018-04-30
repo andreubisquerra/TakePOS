@@ -155,7 +155,7 @@ function TakeposPrinting(id){
         receipt=data.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '<br />');;
 		$.ajax({
 			type: "POST",
-			url: 'http://127.0.0.1:8111/print',
+			url: 'http://<?php print $conf->global->TAKEPOS_PRINT_SERVER;?>:8111/print',
 			data: receipt
 		});
     });
