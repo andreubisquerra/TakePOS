@@ -146,7 +146,7 @@ $(document).ready(function(){
 });
 
 function Print(id){
-	$.colorbox({href:"receipt.php?facid="+id, width:"80%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("PrintTicket");?>"});
+	$.colorbox({href:"receipt.php?facid="+id, width:"40%", height:"90%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("PrintTicket");?>"});
 }
 
 function TakeposPrinting(id){

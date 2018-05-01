@@ -31,39 +31,34 @@ $facid=GETPOST('facid','int');
 $object=new Facture($db);
 $object->fetch($facid);
 
+// IMPORTANT: This file is sended to 'Takepos Printing' application. Keep basic file. No external files as css, js... If you need images use absolut path.
 ?>
 <html>
-    <head>
-    <title><?php echo $langs->trans('PrintTicket') ?></title>
-    <link rel="stylesheet" type="text/css" href="<?php echo DOL_URL_ROOT;?>/cashdesk/css/ticket.css">
-</head>
-
 <body>
-
-<div class="entete">
-    <div class="infos">
-        <p class="address"><?php echo $mysoc->name; ?><br>
-        <?php print dol_nl2br(dol_format_address($mysoc)); ?><br>
-        </p>
-
-        <p class="date_heure"><?php
-        // Recuperation et affichage de la date et de l'heure
-        $now = dol_now();
-        print $langs->trans('Date')." ".dol_print_date($object->date, 'day').'<br>';
-        if ($mysoc->country_code == 'ES') print "Factura simplificada ";
-		print $object->ref;
-        ?></p>
-    </div>
-</div>
-
+<center>
+<font size="4">
+<?php echo $mysoc->name; ?>
+</font>
+</center>
+<br>
+<p align="left">
+<?php print dol_nl2br(dol_format_address($mysoc)); ?>
+</p>
+<p align="right">
+<?php
+print $langs->trans('Date')." ".dol_print_date($object->date, 'day').'<br>';
+if ($mysoc->country_code == 'ES') print "Factura simplificada ";
+print $object->ref;
+?>
+</p>
 <br>
 
-<table class="liste_articles">
+<table width="100%">
     <thead>
-	<tr class="titres">
-            <th><?php print $langs->trans("Label"); ?></th>
-            <th><?php print $langs->trans("Qty"); ?></th>
-            <th><?php print $langs->trans("TotalTTC"); ?></th>
+	<tr>
+        <th align="center"><?php print $langs->trans("Label"); ?></th>
+        <th align="right"><?php print $langs->trans("Qty"); ?></th>
+        <th align="right"><?php print $langs->trans("TotalTTC"); ?></th>
 	</tr>
     </thead>
     <tbody>
@@ -73,32 +68,30 @@ $object->fetch($facid);
     ?>
     <tr>
         <td><?php echo $line->product_label;?></td>
-        <td><?php echo $line->qty;?></td>
-        <td><?php echo price($line->total_ttc);?></td>
+        <td align="right"><?php echo $line->qty;?></td>
+        <td align="right"><?php echo price($line->total_ttc);?></td>
     </tr>
     <?php
     }
     ?>
     </tbody>
 </table>
-
-<table class="totaux">
+<br>
+<table align="right">
 <tr>
-    <th class="nowrap"><?php echo $langs->trans("TotalHT");?></th>
-    <td class="nowrap"><?php echo price($object->total_ht, 1, '', 1, - 1, - 1, $conf->currency)."\n";?></td>
+    <th align="right"><?php echo $langs->trans("TotalHT");?></th>
+    <td align="right"><?php echo price($object->total_ht, 1, '', 1, - 1, - 1, $conf->currency)."\n";?></td>
 </tr>
 <tr>
-    <th class="nowrap"><?php echo $langs->trans("TotalVAT").'</th><td class="nowrap">'.price($object->total_tva, 1, '', 1, - 1, - 1, $conf->currency)."\n";?></td>
+    <th align="right"><?php echo $langs->trans("TotalVAT").'</th><td align="right">'.price($object->total_tva, 1, '', 1, - 1, - 1, $conf->currency)."\n";?></td>
 </tr>
 <tr>
-    <th class="nowrap"><?php echo ''.$langs->trans("TotalTTC").'</th><td class="nowrap">'.price($object->total_ttc, 1, '', 1, - 1, - 1, $conf->currency)."\n";?></td>
+    <th align="right"><?php echo ''.$langs->trans("TotalTTC").'</th><td align="right">'.price($object->total_ttc, 1, '', 1, - 1, - 1, $conf->currency)."\n";?></td>
 </tr>
 </table>
 
 <script type="text/javascript">
     window.print();
 </script>
-
-<a class="lien" href="#" onclick="javascript: window.close(); return(false);"><?php echo $langs->trans("Close"); ?></a>
 </body>
 </html>
