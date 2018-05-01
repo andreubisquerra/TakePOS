@@ -62,6 +62,7 @@ if (GETPOST('action','alpha') == 'set')
 	$res = dolibarr_set_const($db,"TAKEPOS_RECEIPT_PRINTER", GETPOST('TAKEPOS_RECEIPT_PRINTER','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);
     $res = dolibarr_set_const($db,"TAKEPOS_PRINT_SERVER", GETPOST('TAKEPOS_PRINT_SERVER','alpha'),'chaine',0,'',$conf->entity);
+	$res = dolibarr_set_const($db,"TAKEPOS_ORDER_PRINTERS", GETPOST('TAKEPOS_ORDER_PRINTERS','alpha'),'chaine',0,'',$conf->entity);
 
 	dol_syslog("admin/cashdesk: level ".GETPOST('level','alpha'));
 
@@ -176,14 +177,14 @@ if (! empty($conf->service->enabled))
 // Use Takepos printing
 $var=! $var;
 print '<tr class="oddeven"><td>';
-print $langs->trans("DolibarrReceiptPrinter").' (<a href="http://www.takepos.com/takeposprinting">TakePOS Printing App</a>)';
+print $langs->trans("DolibarrReceiptPrinter").' (<a href="http://www.takepos.com/takeposprinting">'.$langs->trans("TakeposPrintingNecesary").'</a>)';
 print '<td colspan="2">';
 print $form->selectyesno("TAKEPOS_RECEIPT_PRINTER",$conf->global->TAKEPOS_RECEIPT_PRINTER,1);
 print "</td></tr>\n";
 
 if ($conf->global->TAKEPOS_RECEIPT_PRINTER){
     print '<tr class="oddeven value"><td>';
-    print $langs->trans("IPAddress").' (<a href="http://www.takepos.com/takeposprinting">TakePOS Printing App</a>)';
+    print $langs->trans("IPAddress").' (<a href="http://www.takepos.com/takeposprinting">'.$langs->trans("TakeposPrintingNecesary").'</a>)';
     print '<td colspan="2">';
     print '<input type="text" size="20" id="TAKEPOS_PRINT_SERVER" name="TAKEPOS_PRINT_SERVER" value="'.$conf->global->TAKEPOS_PRINT_SERVER.'">';
     print '</td></tr>';
@@ -196,6 +197,14 @@ print 'Bar Restaurant';
 print '<td colspan="2">';
 print $form->selectyesno("TAKEPOS_BAR_RESTAURANT",$conf->global->TAKEPOS_BAR_RESTAURANT,1);
 print "</td></tr>\n";
+
+if ($conf->global->TAKEPOS_BAR_RESTAURANT){
+    print '<tr class="oddeven value"><td>';
+    print $langs->trans("OrderPrinters").' (<a href="orderprinters.php?leftmenu=setup">'.$langs->trans("Setup").'</a>)';
+    print '<td colspan="2">';
+    print $form->selectyesno("TAKEPOS_ORDER_PRINTERS",$conf->global->TAKEPOS_ORDER_PRINTERS,1);
+    print '</td></tr>';
+}
 
 print '</table>';
 print '<br>';

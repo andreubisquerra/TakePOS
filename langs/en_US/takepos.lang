@@ -18,3 +18,5 @@ Floors=Floors
 Floor=Floor
 AddTable=Add table
 Place=Place
+TakeposPrintingNecesary='Takepos Printing' application required
+OrderPrinters=Order printers

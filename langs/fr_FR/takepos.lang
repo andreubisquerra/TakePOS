@@ -13,12 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#
-# Générique
-#
-
 CloseBill=Fermer Bill
 Floors=Étages
 Floor=Étage
 AddTable=Ajouter une table
 Place=Endroit
+TakeposPrintingNecesary='Takepos Printing' Application requise
+OrderPrinters=Commande imprimantes

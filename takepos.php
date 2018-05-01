@@ -318,6 +318,10 @@ $menus[$r++]=array('title'=>$langs->trans("Logout"),
 if($conf->global->TAKEPOS_BAR_RESTAURANT){				   
 	$menus[$r++]=array('title'=>$langs->trans("Floors"),
 					'action'=>'Floors();');
+	if ($conf->global->TAKEPOS_ORDER_PRINTERS){
+		$menus[$r++]=array('title'=>$langs->trans("Order"),
+						'action'=>'Order();');
+	}
 }					
 ?>
 <div style="position:absolute; top:1%; left:65.5%; height:37%; width:32.5%;">
