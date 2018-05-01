@@ -16,7 +16,7 @@
  */
 
 define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to go on it from another web site.
-
+$_GET['theme']="md"; // Force theme. MD theme provides better look and feel to TakePOS
 $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php");
 require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';

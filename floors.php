@@ -16,7 +16,7 @@
  */
 
 define('NOCSRFCHECK',1);	// This is main home and login page. We must be able to go on it from another web site.
-
+$_GET['theme']="md"; // Force theme. MD theme provides better look and feel to TakePOS
 $res=@include("../main.inc.php");
 if (! $res) $res=@include("../../main.inc.php"); 
 $floor=GETPOST('floor');
@@ -157,7 +157,7 @@ $( document ).ready(function() {
 <?php } 
 ?>
 
-<div style="position: absolute; left: 25%; bottom: 6%; width:50%; height:3%;">
+<div style="position: absolute; left: 25%; bottom: 8%; width:50%; height:3%;">
     <center>
     <h1><img src="./img/arrow-prev.png" width="5%" onclick="location.href='floors.php?floor=<?php if ($floor>1) { $floor--; echo $floor; $floor++;} else echo "1"; ?>';"><?php echo $langs->trans("Floor")." ".$floor; ?><img src="./img/arrow-next.png" width="5%" onclick="location.href='floors.php?floor=<?php $floor++; echo $floor; ?>';"></h1>
     </center>
