@@ -270,6 +270,12 @@ function Edit(number){
     $('#'+selectedline).find("td:first").html(text+editnumber);
 }
 
+function TakeposPrintingOrder(){
+	$("#poslines").load("invoice.php?action=order&place="+place, function() {
+		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
+	});
+}
+
 $( document ).ready(function() {
     PrintCategories(0);
 	LoadProducts(0);
@@ -320,7 +326,7 @@ if($conf->global->TAKEPOS_BAR_RESTAURANT){
 					'action'=>'Floors();');
 	if ($conf->global->TAKEPOS_ORDER_PRINTERS){
 		$menus[$r++]=array('title'=>$langs->trans("Order"),
-						'action'=>'Order();');
+						'action'=>'TakeposPrintingOrder();');
 	}
 }					
 ?>

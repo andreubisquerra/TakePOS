@@ -126,10 +126,32 @@ if ($action=="updatereduction"){
 	$invoice->fetch($placeid);
 }
 
+if ($action=="order"){
+	$order_receipt_printer1="";
+	$order_receipt_printer2="";
+	$catsprinter1 = explode(';',$conf->global->TAKEPOS_PRINTED_CATEGORIES_1);
+	foreach ($invoice->lines as $line){
+		require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
+		$c = new Categorie($db);
+		$existing = $c->containing($line->fk_product, Categorie::TYPE_PRODUCT, 'id');
+		$result = array_intersect($catsprinter1, $existing);
+		$count=count($result);
+		if ($count>0){
+			$sql="UPDATE ".MAIN_DB_PREFIX."facturedet set special_code='3' where rowid=$line->rowid";
+			$db->query($sql);
+			$order_receipt_printer1.="<br>".$line->qty." ".$line->product_label;
+		}
+    }
+	$invoice->fetch($placeid);
+}
+
 ?>
 <style>
 .selected {
 	color: red;
+}
+.order {
+	color: limegreen;
 }
 </style>
 <script language="javascript">
@@ -143,6 +165,16 @@ $(document).ready(function(){
         else selectedline=this.id;
         selectedtext=$('#'+selectedline).find("td:first").html();
     });
+<?php if ($action=="order" and $order_receipt_printer1!=""){
+	?>
+	$.ajax({
+		type: "POST",
+		url: 'http://<?php print $conf->global->TAKEPOS_PRINT_SERVER;?>:8111/print',
+		data: '<?php print $order_receipt_printer1; ?>'
+	});
+<?php
+}
+?>
 });
 
 function Print(id){
@@ -159,7 +191,6 @@ function TakeposPrinting(id){
 			data: receipt
 		});
     });
-	
 }
 </script>
 <?php
@@ -172,7 +203,9 @@ print '<td class="linecolht" align="right">'.$langs->trans('TotalHTShort').'</td
 print "</tr>\n";
 if ($placeid>0) foreach ($invoice->lines as $line)
 {
-	print '<tr class="drag drop oddeven" id="'.$line->rowid.'">';
+	print '<tr class="drag drop oddeven';
+	if ($line->special_code=="3") print ' order';
+	print '" id="'.$line->rowid.'">';
 	print '<td>'.$line->product_label.$line->desc.'</td>';
 	print '<td align="right">'.$line->qty.'</td>';
 	print '<td align="right">'.price($line->total_ttc).'</td>';
