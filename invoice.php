@@ -66,7 +66,7 @@ if ($action == 'valid' && $user->rights->facture->creer){
 	$invoice->set_paid($user);
 }
 
-if ($action=="addline" and $placeid==0)
+if (($action=="addline" or $action=="freezone") and $placeid==0)
 {
 	if ($placeid==0) {
 	$invoice = new Facture($db);
@@ -127,11 +127,14 @@ if ($action=="updatereduction"){
 }
 
 if ($action=="order"){
+	require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
+	$headerorder='<br><b>'.$langs->trans('Place').' '.$place.'<br>';
 	$order_receipt_printer1="";
 	$order_receipt_printer2="";
 	$catsprinter1 = explode(';',$conf->global->TAKEPOS_PRINTED_CATEGORIES_1);
+	$catsprinter2 = explode(';',$conf->global->TAKEPOS_PRINTED_CATEGORIES_2);
 	foreach ($invoice->lines as $line){
-		require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
+		if ($line->special_code=="3") continue;
 		$c = new Categorie($db);
 		$existing = $c->containing($line->fk_product, Categorie::TYPE_PRODUCT, 'id');
 		$result = array_intersect($catsprinter1, $existing);
@@ -140,6 +143,18 @@ if ($action=="order"){
 			$sql="UPDATE ".MAIN_DB_PREFIX."facturedet set special_code='3' where rowid=$line->rowid";
 			$db->query($sql);
 			$order_receipt_printer1.="<br>".$line->qty." ".$line->product_label;
+		}
+    }
+	foreach ($invoice->lines as $line){
+		if ($line->special_code=="3") continue;
+		$c = new Categorie($db);
+		$existing = $c->containing($line->fk_product, Categorie::TYPE_PRODUCT, 'id');
+		$result = array_intersect($catsprinter2, $existing);
+		$count=count($result);
+		if ($count>0){
+			$sql="UPDATE ".MAIN_DB_PREFIX."facturedet set special_code='3' where rowid=$line->rowid";
+			$db->query($sql);
+			$order_receipt_printer2.="<br>".$line->qty." ".$line->product_label;
 		}
     }
 	$invoice->fetch($placeid);
@@ -170,7 +185,16 @@ $(document).ready(function(){
 	$.ajax({
 		type: "POST",
 		url: 'http://<?php print $conf->global->TAKEPOS_PRINT_SERVER;?>:8111/print',
-		data: '<?php print $order_receipt_printer1; ?>'
+		data: '<?php print $headerorder.$order_receipt_printer1; ?>'
+	});
+<?php
+}
+if ($action=="order" and $order_receipt_printer2!=""){
+	?>
+	$.ajax({
+		type: "POST",
+		url: 'http://<?php print $conf->global->TAKEPOS_PRINT_SERVER;?>:8111/print2',
+		data: '<?php print $headerorder.$order_receipt_printer2; ?>'
 	});
 <?php
 }
