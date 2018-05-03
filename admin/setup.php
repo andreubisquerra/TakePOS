@@ -177,14 +177,14 @@ if (! empty($conf->service->enabled))
 // Use Takepos printing
 $var=! $var;
 print '<tr class="oddeven"><td>';
-print $langs->trans("DolibarrReceiptPrinter").' TakeBOX (<a href="http://www.takepos.com/takebox">'.$langs->trans("TakeboxNecesary").'</a>)';
+print $langs->trans("DolibarrReceiptPrinter").' TakeBOX (<a href="http://en.takepos.com/takebox">'.$langs->trans("TakeboxNecesary").'</a>)';
 print '<td colspan="2">';
 print $form->selectyesno("TAKEBOX",$conf->global->TAKEBOX,1);
 print "</td></tr>\n";
 
 if ($conf->global->TAKEBOX){
     print '<tr class="oddeven value"><td>';
-    print $langs->trans("IPAddress").' (<a href="http://www.takepos.com/takeposprinting">'.$langs->trans("TakeboxNecesary").'</a>)';
+    print $langs->trans("IPAddress").' (<a href="http://en.takepos.com/takebox">'.$langs->trans("TakeboxNecesary").'</a>)';
     print '<td colspan="2">';
     print '<input type="text" size="20" id="TAKEPOS_PRINT_SERVER" name="TAKEPOS_PRINT_SERVER" value="'.$conf->global->TAKEPOS_PRINT_SERVER.'">';
     print '</td></tr>';

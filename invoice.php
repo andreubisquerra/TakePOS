@@ -128,7 +128,8 @@ if ($action=="updatereduction"){
 
 if ($action=="order"){
 	require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
-	$headerorder='<br><b>'.$langs->trans('Place').' '.$place.'<br>';
+	$headerorder='<html><br><b>'.$langs->trans('Place').' '.$place.'<br><table width="65%"><thead><tr><th align="left">'.$langs->trans("Label").'</th><th align="right">'.$langs->trans("Qty").'</th></tr></thead><tbody>';
+	$footerorder='</tbody></table>'.dol_print_date(dol_now(), 'dayhour').'<br></html>';
 	$order_receipt_printer1="";
 	$order_receipt_printer2="";
 	$catsprinter1 = explode(';',$conf->global->TAKEPOS_PRINTED_CATEGORIES_1);
@@ -142,7 +143,7 @@ if ($action=="order"){
 		if ($count>0){
 			$sql="UPDATE ".MAIN_DB_PREFIX."facturedet set special_code='3' where rowid=$line->rowid";
 			$db->query($sql);
-			$order_receipt_printer1.="<br>".$line->qty." ".$line->product_label;
+			$order_receipt_printer1.='<tr>'.$line->product_label.'<td align="right">'.$line->qty.'</td></tr>';
 		}
     }
 	foreach ($invoice->lines as $line){
@@ -154,7 +155,7 @@ if ($action=="order"){
 		if ($count>0){
 			$sql="UPDATE ".MAIN_DB_PREFIX."facturedet set special_code='3' where rowid=$line->rowid";
 			$db->query($sql);
-			$order_receipt_printer2.="<br>".$line->qty." ".$line->product_label;
+			$order_receipt_printer2.='<tr>'.$line->product_label.'<td align="right">'.$line->qty.'</td></tr>';
 		}
     }
 	$invoice->fetch($placeid);
@@ -185,7 +186,7 @@ $(document).ready(function(){
 	$.ajax({
 		type: "POST",
 		url: 'http://<?php print $conf->global->TAKEPOS_PRINT_SERVER;?>:8111/print',
-		data: '<?php print $headerorder.$order_receipt_printer1; ?>'
+		data: '<?php print $headerorder.$order_receipt_printer1.$footerorder; ?>'
 	});
 <?php
 }
@@ -194,7 +195,7 @@ if ($action=="order" and $order_receipt_printer2!=""){
 	$.ajax({
 		type: "POST",
 		url: 'http://<?php print $conf->global->TAKEPOS_PRINT_SERVER;?>:8111/print2',
-		data: '<?php print $headerorder.$order_receipt_printer2; ?>'
+		data: '<?php print $headerorder.$order_receipt_printer2.$footerorder; ?>'
 	});
 <?php
 }
