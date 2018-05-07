@@ -283,7 +283,7 @@ $( document ).ready(function() {
 });
 </script>       
 
-<body style="overflow: hidden">
+<body style="overflow: hidden; background-color:#E8E8E8;">
 
 <div id="poslines" style="position:absolute; top:2%; left:0.5%; height:36%; width:31%; overflow: auto;">
 </div>

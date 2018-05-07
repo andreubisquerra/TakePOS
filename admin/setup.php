@@ -198,7 +198,7 @@ print '<td colspan="2">';
 print $form->selectyesno("TAKEPOS_BAR_RESTAURANT",$conf->global->TAKEPOS_BAR_RESTAURANT,1);
 print "</td></tr>\n";
 
-if ($conf->global->TAKEPOS_BAR_RESTAURANT){
+if ($conf->global->TAKEPOS_BAR_RESTAURANT and $conf->global->TAKEBOX){
     print '<tr class="oddeven value"><td>';
     print $langs->trans("OrderPrinters").' (<a href="orderprinters.php?leftmenu=setup">'.$langs->trans("Setup").'</a>)';
     print '<td colspan="2">';
