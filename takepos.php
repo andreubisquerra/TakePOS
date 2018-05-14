@@ -30,6 +30,7 @@ $action = GETPOST('action');
 $langs->load("main");
 $langs->load("bills");
 $langs->load("orders");
+$langs->load("commercial");
 
 // Title
 $title='TakePOS - Dolibarr '.DOL_VERSION;
@@ -157,6 +158,10 @@ function deleteline(){
 	$("#poslines").load("invoice.php?action=deleteline&place="+place+"&idline="+selectedline, function() {
 		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
 	});
+}
+
+function Customer(){
+	$.colorbox({href:"customers.php?place="+place, width:"90%", height:"80%", transition:"none", iframe:"true", title:"<?php echo $langs->trans("Customer");?>"});
 }
 
 function CloseBill(){
@@ -319,6 +324,8 @@ $menus[$r++]=array('title'=>$langs->trans("Search"),
                    'action'=>'Search();');
 $menus[$r++]=array('title'=>$langs->trans("BackOffice"),
                    'action'=>'window.location.href=\''.DOL_URL_ROOT.'\';');
+$menus[$r++]=array('title'=>$langs->trans("Customer"),
+                   'action'=>'Customer();');
 $menus[$r++]=array('title'=>$langs->trans("Logout"),
                    'action'=>'window.location.href=\''.DOL_URL_ROOT.'/user/logout.php\';');
 if($conf->global->TAKEPOS_BAR_RESTAURANT){				   
