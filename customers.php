@@ -45,7 +45,23 @@ $massaction=GETPOST('massaction','alpha');
 $show_files=GETPOST('show_files','int');
 $confirm=GETPOST('confirm','alpha');
 $toselect = GETPOST('toselect', 'array');
+$idcustomer = GETPOST('idcustomer');
+$place = GETPOST('place');
 $_GET['optioncss'] = 'print';
+
+if ($action=="change"){
+    $sql="UPDATE ".MAIN_DB_PREFIX."facture set fk_soc=".$idcustomer." where facnumber='ProvPOS-".$place."'";
+    $resql = $db->query($sql);
+    ?>
+    <script>
+    parent.$("#poslines").load("invoice.php?place="+<?php print $place;?>, function() {
+        parent.$("#poslines").scrollTop(parent.$("#poslines")[0].scrollHeight);
+        parent.$.colorbox.close();
+    });
+    </script>
+    <?php
+    exit;
+}
 
 // Security check
 $socid = GETPOST('socid','int');
@@ -984,7 +1000,7 @@ while ($i < min($num, $limit))
 
    	$companystatic->fk_prospectlevel=$obj->fk_prospectlevel;
 
-	print '<tr class="oddeven">';
+	print '<tr class="oddeven" onclick="location.href=\'customers.php?action=change&idcustomer='.$obj->rowid.'&place='.$place.'\'">';
 	if (! empty($arrayfields['s.rowid']['checked']))
 	{
 		print '<td class="tdoverflowmax50">';
@@ -997,9 +1013,8 @@ while ($i < min($num, $limit))
 		$savalias = $obj->name_alias;
 		if (! empty($arrayfields['s.name_alias']['checked'])) $companystatic->name_alias='';
 		print '<td class="tdoverflowmax200">';
-		print $companystatic->getNomUrl(1,'',100);
+		print $obj->name;
 		print "</td>\n";
-		$companystatic->name_alias = $savalias;
         if (! $i) $totalarray['nbfield']++;
 	}
 	if (! empty($arrayfields['s.name_alias']['checked']))

@@ -240,6 +240,14 @@ print '</table>';
 print '<p style="font-size:120%;" align="right"><b>'.$langs->trans('TotalTTC');
 if($conf->global->TAKEPOS_BAR_RESTAURANT) print " ".$langs->trans('Place')." ".$place;
 print ': '.price($invoice->total_ttc, 1, '', 1, - 1, - 1, $conf->currency).'&nbsp;</b></p>';
+if ($invoice->socid!=$conf->global->CASHDESK_ID_THIRDPARTY){
+    $soc = new Societe($db);
+    $soc->id = $invoice->socid;
+    $soc->fetch($invoice->socid);
+    print '<p style="font-size:120%;" align="right">(';
+    print $soc->name;
+    print ')</p>';
+}
 if ($action=="valid"){
 	print '<p style="font-size:120%;" align="center"><b>'.$invoice->facnumber." ".$langs->trans('BillShortStatusValidated').'</b></p>';
 	if ($conf->global->TAKEBOX) print '<center><button type="button" onclick="TakeposPrinting('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
