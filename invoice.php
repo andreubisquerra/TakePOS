@@ -92,8 +92,18 @@ if ($action=="freezone"){
 }
 
 if ($action=="deleteline"){
-	$invoice->deleteline($idline);
-	$invoice->fetch($placeid);
+    if ($idline>0 and $placeid>0){ //If exist invoice and line, to avoid errors if deleted from other device or no line selected
+        $invoice->deleteline($idline);
+        $invoice->fetch($placeid);
+    }
+    else if ($placeid>0){ //If exist invoice, but no line selected, proced to delete last line
+        $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facturedet where fk_facture='$placeid' order by rowid DESC";
+        $resql = $db->query($sql);
+        $row = $db->fetch_array ($resql);
+        $deletelineid=$row[0];
+        $invoice->deleteline($deletelineid);
+        $invoice->fetch($deletelineid);
+    }
 }
 
 if ($action=="updateqty"){
