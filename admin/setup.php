@@ -213,5 +213,48 @@ print '<div class="center"><input type="submit" class="button" value="'.$langs->
 
 print "</form>\n";
 
+
+
+// Marketplace
+print "<br><table summary=\"list_of_modules\" class=\"noborder\" width=\"100%\">\n";
+print "<tr class=\"liste_titre\">\n";
+print '<td colspan="2">TakePOS Marketplace</td>';
+print '<td>'.$langs->trans("URL").'</td>';
+print '</tr>';
+
+print "<tr class=\"oddeven\">\n";
+$url='https://www.takepos.com';
+print '<td align="left"><a href="'.$url.'" target="_blank" rel="external"><img border="0" class="imgautosize imgmaxwidth180" src="../img/marketplace/takeposmobile.jpg"></a></td>';
+print '<td>TakePOS mobile version for Android and IOS devices</td>';
+print '<td><a href="'.$url.'" target="_blank" rel="external">'.$url.'</a></td>';
+print '</tr>';
+
+print "<tr class=\"oddeven\">\n";
+$url='https://www.dolistore.com';
+print '<td align="left"><a href="'.$url.'" target="_blank" rel="external"><img border="0" class="imgautosize imgmaxwidth180" src="../img/marketplace/cashcontrol.jpg"></a></td>';
+print '<td>TakePOS CashControl</td>';
+print '<td><a href="'.$url.'" target="_blank" rel="external">'.$url.'</a></td>';
+print '</tr>';
+
+print "</table>\n";
+print '<br>';
+
+// Support
+print "<br><table summary=\"list_of_modules\" class=\"noborder\" width=\"100%\">\n";
+print "<tr class=\"liste_titre\">\n";
+print '<td colspan="2">TakePOS Support</td>';
+print '<td>'.$langs->trans("URL").'</td>';
+print '</tr>';
+
+print "<tr class=\"oddeven\">\n";
+$url='https://www.takepos.com';
+print '<td align="left"><a href="'.$url.'" target="_blank" rel="external"><img border="0" class="imgautosize imgmaxwidth180" src="../img/takepos.png"></a></td>';
+print '<td>TakePOS official developers</td>';
+print '<td><a href="'.$url.'" target="_blank" rel="external">'.$url.'</a></td>';
+print '</tr>';
+
+print "</table>\n";
+print '<br>';
+
 llxFooter();
 $db->close();
