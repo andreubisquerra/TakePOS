@@ -230,7 +230,7 @@ print '<td><a href="'.$url.'" target="_blank" rel="external">'.$url.'</a></td>';
 print '</tr>';
 
 print "<tr class=\"oddeven\">\n";
-$url='https://www.dolistore.com';
+$url='https://www.dolistore.com/es/modulos/949-Cash-Control-7.html';
 print '<td align="left"><a href="'.$url.'" target="_blank" rel="external"><img border="0" class="imgautosize imgmaxwidth180" src="../img/marketplace/cashcontrol.jpg"></a></td>';
 print '<td>TakePOS CashControl</td>';
 print '<td><a href="'.$url.'" target="_blank" rel="external">'.$url.'</a></td>';
