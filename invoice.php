@@ -52,7 +52,8 @@ if ($action == 'valid' && $user->rights->facture->creer){
 	$now=dol_now();
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
-	$invoice->validate($user);
+	if (! empty($conf->stock->enabled) and $conf->global->CASHDESK_NO_DECREASE_STOCK!="1") $invoice->validate($user, '', $conf->global->CASHDESK_ID_WAREHOUSE);
+	else $invoice->validate($user);
 	// Add the payment
 	$payment=new Paiement($db);
 	$payment->datepaye=$now;
