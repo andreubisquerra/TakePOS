@@ -41,6 +41,7 @@ if ($action=="search"){
 	$sql = 'SELECT * FROM '.MAIN_DB_PREFIX.'product';
 	$sql.= ' WHERE entity IN ('.getEntity('product').')';
 	$sql .= natural_search('label', $term);
+	$sql .= " or barcode='".$term."'";
 	$resql = $db->query($sql);
 	$rows = array();
 	while($row = $db->fetch_array ($resql)){

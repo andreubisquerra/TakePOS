@@ -209,6 +209,11 @@ if ($action=="order" and $order_receipt_printer2!=""){
 	});
 <?php
 }
+if ($action=="search"){
+	?>
+	$('#search').focus();
+	<?php
+}
 ?>
 });
 
@@ -265,7 +270,7 @@ if ($action=="valid"){
 }
 if ($action=="search"){
 	print '<center>
-	<input type="text" id="search" onkeyup="Search2();" name="search" style="width:80%;font-size: 150%;" placeholder='.$langs->trans('Search').'
+	<input type="text" id="search" name="search" onkeyup="Search2();" name="search" style="width:80%;font-size: 150%;" placeholder='.$langs->trans('Search').'
 	</center>';
 }
 print '</div>';
