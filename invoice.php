@@ -83,12 +83,12 @@ if (($action=="addline" or $action=="freezone") and $placeid==0)
 if ($action=="addline"){
 	$prod = new Product($db);
 	$prod->fetch($idproduct);
-	$invoice->addline($prod->description, $prod->price, 1, 21, $prod->localtax1_tx, $prod->localtax2_tx, $idproduct, $prod->remise_percent, '', 0, 0, 0, '', $prod->price_base_type, $prod->price_ttc, $prod->type, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
+	$invoice->addline($prod->description, $prod->price, 1, $prod->tva_tx, $prod->localtax1_tx, $prod->localtax2_tx, $idproduct, $prod->remise_percent, '', 0, 0, 0, '', $prod->price_base_type, $prod->price_ttc, $prod->type, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
 	$invoice->fetch($placeid);
 }
 
 if ($action=="freezone"){
-	$invoice->addline($desc, $number, 1, 21, 0, 0, 0, 0, '', 0, 0, 0, '', 'TTC', $number, 0, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
+	$invoice->addline($desc, $number, 1, $conf->global->MAIN_VAT_DEFAULT_IF_AUTODETECT_FAILS, 0, 0, 0, 0, '', 0, 0, 0, '', 'TTC', $number, 0, - 1, 0, '', 0, 0, null, 0, '', 0, 100, '', null, 0);
 	$invoice->fetch($placeid);
 }
 
