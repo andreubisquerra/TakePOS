@@ -158,6 +158,7 @@ function deleteline(){
 	$("#poslines").load("invoice.php?action=deleteline&place="+place+"&idline="+selectedline, function() {
 		$('#poslines').scrollTop($('#poslines')[0].scrollHeight);
 	});
+	Refresh();
 }
 
 function Customer(){
