@@ -323,7 +323,7 @@ $menus[$r++]=array('title'=>$langs->trans("FreeZone"),
 $menus[$r++]=array('title'=>$langs->trans("Search"),
                    'action'=>'Search();');
 $menus[$r++]=array('title'=>$langs->trans("BackOffice"),
-                   'action'=>'window.location.href=\''.DOL_URL_ROOT.'\';');
+                   'action'=>'window.location.href=\''.DOL_URL_ROOT.'/\';');
 $menus[$r++]=array('title'=>$langs->trans("Customer"),
                    'action'=>'Customer();');
 $menus[$r++]=array('title'=>$langs->trans("Logout"),
