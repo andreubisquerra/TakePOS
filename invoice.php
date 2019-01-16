@@ -266,8 +266,9 @@ if ($invoice->socid!=$conf->global->CASHDESK_ID_THIRDPARTY){
 }
 if ($action=="valid"){
 	print '<p style="font-size:120%;" align="center"><b>'.$invoice->facnumber." ".$langs->trans('BillShortStatusValidated').'</b></p>';
-	if ($conf->global->TAKEBOX) print '<center><button type="button" onclick="TakeposPrinting('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
-	else print '<center><button type="button" onclick="Print('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
+	if ($conf->global->TAKEBOX) print '<center><button id="buttonprint" type="button" onclick="TakeposPrinting('.$placeid.');">'.$langs->trans('PrintTicket').'</button><center>';
+    else print '<center><button type="button" id="buttonprint" onclick="Print('.$placeid.');">'.$langs->trans('PrintTicket').'</button></center>';
+    print '<script language="javascript">$("#buttonprint").click();</script>';
 }
 if ($action=="search"){
 	print '<center>
