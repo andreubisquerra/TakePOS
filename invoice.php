@@ -52,9 +52,8 @@ $paiementid=$codes[0];
  */
 
 if ($action == 'valid' && $user->rights->facture->creer){
-	if ($pay=="LIQ") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CASH;
-	else if ($pay=="CB") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CB;
-	else if ($pay=="CHQ") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CHEQUE;
+    $accountname="CASHDESK_ID_BANKACCOUNT_".$pay;
+    $bankaccount=$conf->global->$accountname;
 	$now=dol_now();
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
