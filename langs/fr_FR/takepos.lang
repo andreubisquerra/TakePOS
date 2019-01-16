@@ -20,3 +20,4 @@ AddTable=Ajouter une table
 Place=Endroit
 TakeboxNecesary='TakeBOX' Application requise
 OrderPrinters=Commande imprimantes
+AutoPrintTickets=Imprimer les tickets automatiquement

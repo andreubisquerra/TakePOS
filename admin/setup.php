@@ -63,6 +63,7 @@ if (GETPOST('action','alpha') == 'set')
 	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);
     $res = dolibarr_set_const($db,"TAKEPOS_PRINT_SERVER", GETPOST('TAKEPOS_PRINT_SERVER','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEPOS_ORDER_PRINTERS", GETPOST('TAKEPOS_ORDER_PRINTERS','alpha'),'chaine',0,'',$conf->entity);
+	$res = dolibarr_set_const($db,"TAKEPOS_AUTO_PRINT_TICKETS", GETPOST('TAKEPOS_AUTO_PRINT_TICKETS','int'),'int',0,'',$conf->entity);
 
 	dol_syslog("admin/cashdesk: level ".GETPOST('level','alpha'));
 
@@ -173,6 +174,11 @@ if (! empty($conf->service->enabled))
     print $form->selectyesno("CASHDESK_SERVICES",$conf->global->CASHDESK_SERVICES,1);
     print "</td></tr>\n";
 }
+print '<tr class="oddeven"><td>';
+print $langs->trans("AutoPrintTickets");
+print '<td colspan="2">';
+print $form->selectyesno("TAKEPOS_AUTO_PRINT_TICKETS",$conf->global->TAKEPOS_AUTO_PRINT_TICKETS,1);
+print "</td></tr>\n";
 
 // Use Takepos printing
 $var=! $var;
