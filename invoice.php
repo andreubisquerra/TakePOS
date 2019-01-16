@@ -30,7 +30,7 @@ $place = GETPOST('place');
 $number = GETPOST('number');
 $idline = GETPOST('idline');
 $desc = GETPOST('desc');
-$pay = GETPOST('pay');
+$pay = GETPOST('pay', 'alpha');
 
 $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$place'";
 $resql = $db->query($sql);
@@ -42,13 +42,19 @@ else{
 	$invoice->fetch($placeid);
 }
 
+// Retrieve paiementid
+$sql="SELECT id FROM ".MAIN_DB_PREFIX."c_paiement WHERE code='$pay'";
+$resql = $db->query($sql);
+$codes = $db->fetch_array ($resql);
+$paiementid=$codes[0];
 /*
  * Actions
  */
 
 if ($action == 'valid' && $user->rights->facture->creer){
-	if ($pay=="cash") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CASH;
-	else if ($pay=="card") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CB;
+	if ($pay=="LIQ") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CASH;
+	else if ($pay=="CB") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CB;
+	else if ($pay=="CHQ") $bankaccount=$conf->global->CASHDESK_ID_BANKACCOUNT_CHEQUE;
 	$now=dol_now();
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
@@ -59,8 +65,7 @@ if ($action == 'valid' && $user->rights->facture->creer){
 	$payment->datepaye=$now;
 	$payment->bank_account=$bankaccount;
 	$payment->amounts[$invoice->id]=$invoice->total_ttc;
-	if ($pay=="cash") $payment->paiementid=4;
-	else if ($pay=="card") $payment->paiementid=6;
+    $payment->paiementid=$paiementid;
 	$payment->num_paiement=$invoice->facnumber;
 	$payment->create($user);
 	$payment->addPaymentToBank($user, 'payment', '(CustomerInvoicePayment)', $bankaccount, '', '');

@@ -37,6 +37,16 @@ top_htmlhead($head, $title, $disablejs, $disablehead, $arrayofjs, $arrayofcss);
 $langs->load("main");
 $langs->load("bills");
 $langs->load("cashdesk");
+
+$sql="SELECT code,libelle FROM ".MAIN_DB_PREFIX."c_paiement WHERE active=1 ORDER BY libelle";
+$resql = $db->query($sql);
+$paiements = array();
+if($resql){
+	while ($obj = $db->fetch_object($resql)){
+        array_push($paiements, $obj);
+    }
+}
+//
 ?>
 <link rel="stylesheet" href="css/pos.css"> 
 	<script>
@@ -88,19 +98,41 @@ $langs->load("cashdesk");
 <button type="button" class="calcbutton" onclick="addreceived(10);">10</button>
 <button type="button" class="calcbutton" onclick="addreceived(20);">20</button>
 <button type="button" class="calcbutton" onclick="addreceived(50);">50</button>
-<button type="button" class="calcbutton2" onclick="Validate('cash');"><?php echo $langs->trans("Cash"); ?></button>
+<?php if (count($paiements) >0) : ?>
+<button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[0]->code); ?>');"><?php echo $langs->trans($paiements[0]->libelle); ?></button>
+<?php else: ?>
+<button type="button" class="calcbutton2">"No paiment mode defined"</button>
+<?php endif ?>
 <button type="button" class="calcbutton" onclick="addreceived(1);">1</button>
 <button type="button" class="calcbutton" onclick="addreceived(2);">2</button>
 <button type="button" class="calcbutton" onclick="addreceived(5);">5</button>
-<button type="button" class="calcbutton2" onclick="Validate('card');"><?php echo $langs->trans("PaymentTypeCB"); ?></button>
+<?php if (count($paiements) >1) : ?>
+<button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[1]->code); ?>');"><?php echo $langs->trans($paiements[1]->libelle); ?></button>
+<?php else: ?>
+<button type="button" class="calcbutton2">"No second paiment mode defined"</button>
+<?php endif ?>
 <button type="button" class="calcbutton" onclick="addreceived(0.10);">0.10</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.20);">0.20</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.50);">0.50</button>
-<button type="button" class="calcbutton2" onclick="printclick();"><span id="printtext"><?php echo $langs->trans("GoBack"); ?></span></button>
+<?php if (count($paiements) >1) : ?>
+<button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[2]->code); ?>');"><?php echo $langs->trans($paiements[2]->libelle); ?></button>
+<?php else: ?>
+<button type="button" class="calcbutton2">"No second paiment mode defined"</button>
+<?php endif ?>
 <button type="button" class="calcbutton" onclick="addreceived(0.01);">0.01</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.02);">0.02</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.05);">0.05</button>
+<?php
+$i=3;
+while($i < count($paiements)){
+?>
+<button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[$i]->code); ?>');"><?php echo $langs->trans($paiements[$i]->libelle); ?></button>
+<?php
+    $i=$i+1;
+}
+?>
 <button type="button" class="calcbutton2" onclick="reset();"><span style='font-size: 150%;'>C</span></button>
+<button type="button" class="calcbutton2" onclick="printclick();"><span id="printtext"><?php echo $langs->trans("GoBack"); ?></span></button>
 </div>
 
 </body>
