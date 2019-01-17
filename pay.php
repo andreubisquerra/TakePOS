@@ -43,7 +43,8 @@ $resql = $db->query($sql);
 $paiements = array();
 if($resql){
 	while ($obj = $db->fetch_object($resql)){
-        array_push($paiements, $obj);
+        $accountname="CASHDESK_ID_BANKACCOUNT_".$obj->code;
+        if($conf->global->$accountname) array_push($paiements, $obj);
     }
 }
 //
