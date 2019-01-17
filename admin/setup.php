@@ -63,6 +63,8 @@ if (GETPOST('action','alpha') == 'set')
 	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);
     $res = dolibarr_set_const($db,"TAKEPOS_PRINT_SERVER", GETPOST('TAKEPOS_PRINT_SERVER','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEPOS_ORDER_PRINTERS", GETPOST('TAKEPOS_ORDER_PRINTERS','alpha'),'chaine',0,'',$conf->entity);
+	$res = dolibarr_set_const($db,"TAKEPOS_AUTO_PRINT_TICKETS", GETPOST('TAKEPOS_AUTO_PRINT_TICKETS','int'),'int',0,'',$conf->entity);
+	$res = dolibarr_set_const($db,"TAKEPOS_TICKET_TEXT", GETPOST('TAKEPOS_TICKET_TEXT','alpha'),'int',0,'',$conf->entity);
 
 	dol_syslog("admin/cashdesk: level ".GETPOST('level','alpha'));
 
@@ -129,6 +131,12 @@ if (! empty($conf->banque->enabled))
 	$form->select_comptes($conf->global->CASHDESK_ID_BANKACCOUNT_CB,'CASHDESK_ID_BANKACCOUNT_CB',0,"courant=1",1);
 	print '</td></tr>';
 }
+
+print '<tr class="oddeven"><td width=\"50%\">'.$langs->trans("CashDeskMoreText").'</td>';
+print '<td colspan="2">';
+print '<input type="textarea" id="TAKEPOS_TICKET_TEXT" name="TAKEPOS_TICKET_TEXT" value="'.$conf->global->TAKEPOS_TICKET_TEXT.'">';
+print '</td></tr>';
+
 
 if (! empty($conf->stock->enabled))
 {

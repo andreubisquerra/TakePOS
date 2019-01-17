@@ -50,6 +50,7 @@ $object->fetch($facid);
 <br>
 <p align="left">
 <?php print dol_nl2br(dol_format_address($mysoc)); ?>
+<?php if($conf->global->TAKEPOS_TICKET_TEXT) print "<br/>".dol_nl2br($conf->global->TAKEPOS_TICKET_TEXT); ?>
 </p>
 <p align="right">
 <?php
