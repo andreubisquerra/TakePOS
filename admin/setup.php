@@ -127,7 +127,7 @@ if (! empty($conf->banque->enabled))
         $name="CASHDESK_ID_BANKACCOUNT_".$modep->code;
         print '<tr class="oddeven"><td>'.$langs->trans("CashDeskBankAccountFor").' '.$langs->trans($modep->libelle).'</td>';
         print '<td colspan="2">';
-        $cour=$modep->code == 'LIQ'?2:1;
+        $cour=preg_match('/^LIQ.*/', $modep->code)?2:1;
         $form->select_comptes($conf->global->$name,$name,0,"courant=$cour",1);
         print '</td></tr>';
     }
