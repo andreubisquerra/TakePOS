@@ -40,8 +40,10 @@ if ($action=="getProducts"){
 if ($action=="search"){
 	$sql = 'SELECT * FROM '.MAIN_DB_PREFIX.'product';
 	$sql.= ' WHERE entity IN ('.getEntity('product').')';
-	$sql .= natural_search('label', $term);
+    $sql .= ' AND tosell = 1 AND ( ';
+    $sql .= natural_search('label', $term, 0, 1);
 	$sql .= " or barcode='".$term."'";
+    $sql .= ' )';
 	$resql = $db->query($sql);
 	$rows = array();
 	while($row = $db->fetch_array ($resql)){
