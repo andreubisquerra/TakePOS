@@ -95,6 +95,21 @@ if($resql){
 </center>
 </div>
 
+<?php
+$action_buttons = array(
+    array(
+        "function" =>"reset()",
+        "span" => "style='font-size: 150%;'",
+        "text" => "C",
+    ),
+    array(
+        "function" => "printclick()",
+        "span" => "id='printtext'",
+        "text" => $langs->trans("GoBack"),
+    ),
+);
+?>
+
 <div style="position:absolute; top:40%; left:5%; height:55%; width:91%;">
 <button type="button" class="calcbutton" onclick="addreceived(10);">10</button>
 <button type="button" class="calcbutton" onclick="addreceived(20);">20</button>
@@ -110,7 +125,10 @@ if($resql){
 <?php if (count($paiements) >1) : ?>
 <button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[1]->code); ?>');"><?php echo $langs->trans($paiements[1]->libelle); ?></button>
 <?php else: ?>
-<button type="button" class="calcbutton2"></button>
+<?php
+$button = array_pop($action_buttons);
+?>
+    <button type="button" class="calcbutton2" onclick="<?php echo $button["function"];?>"><span <?php echo $button["span"];?>><?php echo $button["text"];?></span></button>
 <?php endif ?>
 <button type="button" class="calcbutton" onclick="addreceived(0.10);">0.10</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.20);">0.20</button>
@@ -118,7 +136,10 @@ if($resql){
 <?php if (count($paiements) >2) : ?>
 <button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[2]->code); ?>');"><?php echo $langs->trans($paiements[2]->libelle); ?></button>
 <?php else: ?>
-<button type="button" class="calcbutton2"></button>
+<?php
+$button = array_pop($action_buttons);
+?>
+    <button type="button" class="calcbutton2" onclick="<?php echo $button["function"];?>"><span <?php echo $button["span"];?>><?php echo $button["text"];?></span></button>
 <?php endif ?>
 <button type="button" class="calcbutton" onclick="addreceived(0.01);">0.01</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.02);">0.02</button>
@@ -132,8 +153,13 @@ while($i < count($paiements)){
     $i=$i+1;
 }
 ?>
-<button type="button" class="calcbutton2" onclick="reset();"><span style='font-size: 150%;'>C</span></button>
-<button type="button" class="calcbutton2" onclick="printclick();"><span id="printtext"><?php echo $langs->trans("GoBack"); ?></span></button>
+<?php
+foreach($action_buttons as $button){
+?>
+    <button type="button" class="calcbutton2" onclick="<?php echo $button["function"];?>"><span <?php echo $button["span"];?>><?php echo $button["text"];?></span></button>
+<?php
+}
+?>
 </div>
 
 </body>
