@@ -61,6 +61,7 @@ if (GETPOST('action','alpha') == 'set')
 	$res = dolibarr_set_const($db,"CASHDESK_SERVICES", GETPOST('CASHDESK_SERVICES','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEBOX", GETPOST('TAKEBOX','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEPOS_BAR_RESTAURANT", GETPOST('TAKEPOS_BAR_RESTAURANT','alpha'),'chaine',0,'',$conf->entity);
+	$res = dolibarr_set_const($db,"TAKEPOS_TICKET_VAT_GROUPPED", GETPOST('TAKEPOS_TICKET_VAT_GROUPPED','alpha'),'chaine',0,'',$conf->entity);
     $res = dolibarr_set_const($db,"TAKEPOS_PRINT_SERVER", GETPOST('TAKEPOS_PRINT_SERVER','alpha'),'chaine',0,'',$conf->entity);
 	$res = dolibarr_set_const($db,"TAKEPOS_ORDER_PRINTERS", GETPOST('TAKEPOS_ORDER_PRINTERS','alpha'),'chaine',0,'',$conf->entity);
 
@@ -190,12 +191,19 @@ if ($conf->global->TAKEBOX){
     print '</td></tr>';
 }
 
+
 // Bar Restaurant mode
 $var=! $var;
 print '<tr class="oddeven"><td>';
 print 'Bar Restaurant';
 print '<td colspan="2">';
 print $form->selectyesno("TAKEPOS_BAR_RESTAURANT",$conf->global->TAKEPOS_BAR_RESTAURANT,1);
+print "</td></tr>\n";
+
+print '<tr class="oddeven"><td>';
+print $langs->trans('TicketVatGrouped');
+print '<td colspan="2">';
+print $form->selectyesno("TAKEPOS_TICKET_VAT_GROUPPED",$conf->global->TAKEPOS_TICKET_VAT_GROUPPED,1);
 print "</td></tr>\n";
 
 if ($conf->global->TAKEPOS_BAR_RESTAURANT and $conf->global->TAKEBOX){

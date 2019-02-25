@@ -20,3 +20,4 @@ AddTable=Ajouter une table
 Place=Endroit
 TakeboxNecesary='TakeBOX' Application requise
 OrderPrinters=Commande imprimantes
+TicketVatGrouped=Grouper la TVA par taux dans les tickets
