@@ -110,7 +110,7 @@ if($resql){
 <?php if (count($paiements) >1) : ?>
 <button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[1]->code); ?>');"><?php echo $langs->trans($paiements[1]->libelle); ?></button>
 <?php else: ?>
-<button type="button" class="calcbutton2">"No second paiment mode defined"</button>
+<button type="button" class="calcbutton2"></button>
 <?php endif ?>
 <button type="button" class="calcbutton" onclick="addreceived(0.10);">0.10</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.20);">0.20</button>
@@ -118,7 +118,7 @@ if($resql){
 <?php if (count($paiements) >2) : ?>
 <button type="button" class="calcbutton2" onclick="Validate('<?php echo $langs->trans($paiements[2]->code); ?>');"><?php echo $langs->trans($paiements[2]->libelle); ?></button>
 <?php else: ?>
-<button type="button" class="calcbutton2">"No second paiment mode defined"</button>
+<button type="button" class="calcbutton2"></button>
 <?php endif ?>
 <button type="button" class="calcbutton" onclick="addreceived(0.01);">0.01</button>
 <button type="button" class="calcbutton" onclick="addreceived(0.02);">0.02</button>
