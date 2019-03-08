@@ -32,6 +32,11 @@ $idline = GETPOST('idline');
 $desc = GETPOST('desc');
 $pay = GETPOST('pay');
 
+function fail($message){
+    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+    die($message);
+}
+
 $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture where facnumber='ProvPOS-$place'";
 $resql = $db->query($sql);
 $row = $db->fetch_array ($resql);
@@ -52,6 +57,26 @@ if ($action == 'valid' && $user->rights->facture->creer){
 	$now=dol_now();
 	$invoice = new Facture($db);
 	$invoice->fetch($placeid);
+    if($invoice->total_ttc<0){
+        $invoice->type= $invoice::TYPE_CREDIT_NOTE;
+        $sql="SELECT rowid FROM ".MAIN_DB_PREFIX."facture WHERE ";
+        $sql.="fk_soc = '".$invoice->socid."' ";
+        $sql.="AND type <> ".Facture::TYPE_CREDIT_NOTE." ";
+        $sql.="AND fk_statut >= ".$invoice::STATUS_VALIDATED." ";
+        $sql.="ORDER BY rowid DESC";
+        $resql = $db->query($sql);
+        if($resql){
+            $obj = $db->fetch_object($resql);
+            $fk_source=$obj->rowid;
+            if($fk_source == null){
+                fail($langs->transnoentitiesnoconv("NoPreviousBillForCustomer"));
+            }
+        }else{
+            fail($langs->transnoentitiesnoconv("NoPreviousBillForCustomer"));
+        }
+        $invoice->fk_facture_source=$fk_source;
+        $invoice->update($user);
+    }
 	if (! empty($conf->stock->enabled) and $conf->global->CASHDESK_NO_DECREASE_STOCK!="1") $invoice->validate($user, '', $conf->global->CASHDESK_ID_WAREHOUSE);
 	else $invoice->validate($user);
 	// Add the payment

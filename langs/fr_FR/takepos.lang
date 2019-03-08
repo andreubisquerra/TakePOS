@@ -20,3 +20,4 @@ AddTable=Ajouter une table
 Place=Endroit
 TakeboxNecesary='TakeBOX' Application requise
 OrderPrinters=Commande imprimantes
+NoPreviousBillForCustomer=Impossible de créer une facture négative sans une facture précédente pour le client courant
