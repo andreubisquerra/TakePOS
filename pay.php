@@ -47,7 +47,7 @@ $langs->load("cashdesk");
 	$('#change1').html(received.toFixed(2));
 	if (received><?php echo $invoice->total_ttc;?>)
 		{
-		var change=parseFloat(received-<?php echo $invoice->total_ttc;?>);
+		var change=parseFloat(received-(<?php echo $invoice->total_ttc;?>));
 		$('#change2').html(change.toFixed(2));
 		}
 	}
@@ -60,9 +60,13 @@ $langs->load("cashdesk");
 	}
 	
 	function Validate(payment){
-        parent.$("#poslines").load("invoice.php?place=<?php echo $place;?>&action=valid&pay="+payment, function() {
-            parent.$("#poslines").scrollTop(parent.$("#poslines")[0].scrollHeight);
-            parent.$.colorbox.close();
+        parent.$("#poslines").load("invoice.php?place=<?php echo $place;?>&action=valid&pay="+payment, function(response, status, xhr) {
+            if(status == "error"){
+                alert(response);
+            }else{
+                parent.$("#poslines").scrollTop(parent.$("#poslines")[0].scrollHeight);
+                parent.$.colorbox.close();
+            }
         });
 		
 	}
