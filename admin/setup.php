@@ -223,14 +223,14 @@ print '<td>'.$langs->trans("URL").'</td>';
 print '</tr>';
 
 print "<tr class=\"oddeven\">\n";
-$url='http://www.takepos.com';
+$url='https://www.dolistore.com/en/modules/980-TakePOS-7-mobile.html';
 print '<td align="left"><a href="'.$url.'" target="_blank" rel="external"><img border="0" class="imgautosize imgmaxwidth180" src="../img/marketplace/takeposmobile.jpg"></a></td>';
-print '<td>TakePOS mobile version for Android and IOS devices</td>';
+print '<td>TakePOS for mobile devices</td>';
 print '<td><a href="'.$url.'" target="_blank" rel="external">'.$url.'</a></td>';
 print '</tr>';
 
 print "<tr class=\"oddeven\">\n";
-$url='https://www.dolistore.com/es/modulos/949-Cash-Control-7.html';
+$url='https://www.dolistore.com/en/modules/949-Cash-Control-7.html';
 print '<td align="left"><a href="'.$url.'" target="_blank" rel="external"><img border="0" class="imgautosize imgmaxwidth180" src="../img/marketplace/cashcontrol.jpg"></a></td>';
 print '<td>TakePOS CashControl</td>';
 print '<td><a href="'.$url.'" target="_blank" rel="external">'.$url.'</a></td>';

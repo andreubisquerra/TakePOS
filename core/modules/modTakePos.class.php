@@ -72,7 +72,7 @@ class modTakePos extends DolibarrModules
 		$this->editor_url = 'https://www.takepos.com';
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
-		$this->version = '7.0.0';
+		$this->version = '8.0.0';
 		// Key used in llx_const table to save module status enabled/disabled (where TAKEPOS is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		// Name of image file used for this module.
@@ -233,7 +233,7 @@ class modTakePos extends DolibarrModules
 		/* BEGIN MODULEBUILDER TOPMENU */
 		$this->menu[$r++]=array('fk_menu'=>'',			                // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 								'type'=>'top',			                // This is a Top menu entry
-								'titre'=>'TakePos Essentials',
+								'titre'=>'TakePos',
 								'mainmenu'=>'takepos',
 								'leftmenu'=>'',
 								'url'=>'/takepos/takepos.php',
